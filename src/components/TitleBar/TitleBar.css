@@ -1,0 +1,15 @@
+.titlebar {
+    height: 30px;
+    background-color: #1e1e1e;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    /* -webkit-user-select: none; */
+    /* -webkit-app-region: drag; */
+  }
+  
+  .title {
+    font-weight: bold;
+  }
+  
