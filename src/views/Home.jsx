@@ -1,9 +1,10 @@
 import React from 'react';
+import { invoke } from '@tauri-apps/api/core';
 
 const Home = () => {
   return (
-    <div className="view">
-      <h1>Home Page</h1>
+    <div>
+      Hello world
     </div>
   );
 };

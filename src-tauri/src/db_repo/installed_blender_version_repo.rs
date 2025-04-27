@@ -1,0 +1,64 @@
+use sqlx::SqlitePool;
+use crate::models::InstalledBlenderVersion;
+
+pub struct InstalledBlenderVersionRepository<'a> {
+    pub pool: &'a SqlitePool,
+}
+
+impl<'a> InstalledBlenderVersionRepository<'a> {
+    pub fn new(pool: &'a SqlitePool) -> Self {
+        Self { pool }
+    }
+
+    pub async fn insert(&self, entry: &InstalledBlenderVersion) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            "INSERT INTO installed_blender_versions (id, version, variant_type, download_url, is_default, installation_directory_path, executable_file_path) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            entry.id,
+            entry.version,
+            entry.variant_type,
+            entry.download_url,
+            entry.is_default,
+            entry.installation_directory_path,
+            entry.executable_file_path
+        )
+        .execute(self.pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn fetch(&self, id: Option<&str>, limit: Option<i64>) -> Result<Vec<InstalledBlenderVersion>, sqlx::Error> {
+        if let Some(id) = id {
+            let item = sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions WHERE id = ?")
+                .bind(id)
+                .fetch_all(self.pool)
+                .await?;
+            Ok(item)
+        } else if let Some(limit) = limit {
+            sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions LIMIT ?")
+                .bind(limit)
+                .fetch_all(self.pool)
+                .await
+        } else {
+            sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions")
+                .fetch_all(self.pool)
+                .await
+        }
+    }
+
+    pub async fn update(&self, version: &InstalledBlenderVersion) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            "UPDATE installed_blender_versions SET version = ?, variant_type = ?, download_url = ?, is_default = ?, installation_directory_path = ?, executable_file_path = ?, modified = CURRENT_TIMESTAMP, accessed = CURRENT_TIMESTAMP WHERE id = ?",
+            version.version,
+            version.variant_type,
+            version.download_url,
+            version.is_default,
+            version.installation_directory_path,
+            version.executable_file_path,
+            version.id
+        )
+        .execute(self.pool)
+        .await?;
+        Ok(())
+    }
+}
+
