@@ -13,9 +13,11 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-sql": "^2.2.0",
+    "@tauri-apps/plugin-upload": "^2.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.5.1"
+    "react-router-dom": "^7.5.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",

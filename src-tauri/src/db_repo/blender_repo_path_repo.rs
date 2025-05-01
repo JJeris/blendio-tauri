@@ -1,5 +1,5 @@
-use sqlx::SqlitePool;
 use crate::models::BlenderRepoPath;
+use sqlx::SqlitePool;
 
 pub struct BlenderRepoPathRepository<'a> {
     pub pool: &'a SqlitePool,
@@ -22,12 +22,18 @@ impl<'a> BlenderRepoPathRepository<'a> {
         Ok(())
     }
 
-    pub async fn fetch(&self, id: Option<&str>, limit: Option<i64>) -> Result<Vec<BlenderRepoPath>, sqlx::Error> {
+    pub async fn fetch(
+        &self,
+        id: Option<&str>,
+        limit: Option<i64>,
+    ) -> Result<Vec<BlenderRepoPath>, sqlx::Error> {
         if let Some(id) = id {
-            let item = sqlx::query_as::<_, BlenderRepoPath>("SELECT * FROM blender_repo_paths WHERE id = ?")
-                .bind(id)
-                .fetch_all(self.pool)
-                .await?;
+            let item = sqlx::query_as::<_, BlenderRepoPath>(
+                "SELECT * FROM blender_repo_paths WHERE id = ?",
+            )
+            .bind(id)
+            .fetch_all(self.pool)
+            .await?;
             Ok(item)
         } else if let Some(limit) = limit {
             sqlx::query_as::<_, BlenderRepoPath>("SELECT * FROM blender_repo_paths LIMIT ?")

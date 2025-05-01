@@ -1,5 +1,5 @@
-use sqlx::SqlitePool;
 use crate::models::InstalledBlenderVersion;
+use sqlx::SqlitePool;
 
 pub struct InstalledBlenderVersionRepository<'a> {
     pub pool: &'a SqlitePool,
@@ -26,18 +26,26 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
         Ok(())
     }
 
-    pub async fn fetch(&self, id: Option<&str>, limit: Option<i64>) -> Result<Vec<InstalledBlenderVersion>, sqlx::Error> {
+    pub async fn fetch(
+        &self,
+        id: Option<&str>,
+        limit: Option<i64>,
+    ) -> Result<Vec<InstalledBlenderVersion>, sqlx::Error> {
         if let Some(id) = id {
-            let item = sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions WHERE id = ?")
-                .bind(id)
-                .fetch_all(self.pool)
-                .await?;
+            let item = sqlx::query_as::<_, InstalledBlenderVersion>(
+                "SELECT * FROM installed_blender_versions WHERE id = ?",
+            )
+            .bind(id)
+            .fetch_all(self.pool)
+            .await?;
             Ok(item)
         } else if let Some(limit) = limit {
-            sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions LIMIT ?")
-                .bind(limit)
-                .fetch_all(self.pool)
-                .await
+            sqlx::query_as::<_, InstalledBlenderVersion>(
+                "SELECT * FROM installed_blender_versions LIMIT ?",
+            )
+            .bind(limit)
+            .fetch_all(self.pool)
+            .await
         } else {
             sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions")
                 .fetch_all(self.pool)
@@ -61,4 +69,3 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
         Ok(())
     }
 }
-

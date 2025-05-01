@@ -1,5 +1,5 @@
-use sqlx::SqlitePool;
 use crate::models::ProjectFile;
+use sqlx::SqlitePool;
 
 pub struct ProjectFileRepository<'a> {
     pub pool: &'a SqlitePool,
@@ -24,7 +24,11 @@ impl<'a> ProjectFileRepository<'a> {
         Ok(())
     }
 
-    pub async fn fetch(&self, id: Option<&str>, limit: Option<i64>) -> Result<Vec<ProjectFile>, sqlx::Error> {
+    pub async fn fetch(
+        &self,
+        id: Option<&str>,
+        limit: Option<i64>,
+    ) -> Result<Vec<ProjectFile>, sqlx::Error> {
         if let Some(id) = id {
             let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE id = ?")
                 .bind(id)

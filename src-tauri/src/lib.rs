@@ -1,25 +1,25 @@
 use tauri::Manager;
 
 mod db_context;
-mod models;
 mod db_repo;
+mod models;
 
 use crate::db_repo::*;
 use crate::models::*;
 
 mod blender_version;
+mod file_system_utility;
 mod project_file;
 mod python_script;
-mod file_system_utility;
 
 use crate::blender_version::*;
 use crate::project_file::*;
 use crate::python_script::*;
 
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_upload::init())
         .setup(|app| {
             // Set up database manually
             tauri::async_runtime::spawn(async move {
@@ -53,7 +53,7 @@ pub fn run() {
             //
             insert_installed_blender_version_data,
             run_blender_version,
-            insert_downloadable_blender_version_data,
+            get_downloadable_blender_version_data,
             download_and_install_blender_version,
             uninstall_blender_version,
             insert_blender_version_installation_location,
@@ -68,8 +68,8 @@ pub fn run() {
             insert_recently_used_python_script_file_paths,
             find_python_script_file_in_local_file_system,
             //
-            insert_user,
-            get_users,
+            // insert_user,
+            // get_users,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
