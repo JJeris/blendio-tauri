@@ -2,12 +2,14 @@
 
 use chrono::Utc;
 use tauri::{utils::platform::Target, AppHandle, Manager};
+use tauri_plugin_dialog::DialogExt;
 use uuid::Uuid;
 
 use crate::{
     db_context::establish_connection,
     db_repo::{BlenderRepoPathRepository, UserRepository},
     models::{BlenderRepoPath, DownloadableBlenderVersion, User},
+    AppState,
 };
 
 /// Saglabāt instalētu Blender versiju datus
@@ -102,62 +104,104 @@ pub async fn uninstall_blender_version(
 #[tauri::command]
 pub async fn insert_blender_version_installation_location(
     app: AppHandle,
-    directory_path: std::path::PathBuf,
+    state: tauri::State<'_, AppState>,
 ) -> Result<(), String> {
-    let db_url = get_database_url(&app)?;
-    let pool = sqlx::SqlitePool::connect(&db_url)
-        .await
-        .map_err(|e| e.to_string())?;
-
-    let repo = BlenderRepoPath {
+    let repo_directory_path = app.dialog().file().blocking_pick_folder();
+    let entry = BlenderRepoPath {
         id: Uuid::new_v4().to_string(),
-        repo_directory_path: directory_path.to_string_lossy().into_owned(),
+        repo_directory_path: match repo_directory_path {
+            Some(val) => val.to_string(),
+            None => return Err(String::new())
+        }, 
         is_default: false,
         created: Utc::now().to_rfc3339(),
         modified: Utc::now().to_rfc3339(),
         accessed: Utc::now().to_rfc3339(),
     };
-
-    let repository = BlenderRepoPathRepository::new(&pool);
-    repository.insert(&repo).await.map_err(|e| e.to_string())
+    let repository = BlenderRepoPathRepository::new(&state.pool);
+    let results = match repository.fetch(None, None).await {
+        Ok(val) => val,
+        Err(err) => return Err(String::new()),
+    };
+    if (results.iter().any(|x| x.repo_directory_path == entry.repo_directory_path)) {
+        return Ok(());
+    }
+    match repository.insert(&entry).await {
+        Ok(_) => Ok(()),
+        Err(err) => return Err(String::new()),
+    }
 }
 
-/// Saglabāt Blender versiju lejupielādes/instalācijas lokāciju failu sistēmā.
+/// Atjaunināt Blender versiju lejupielādes/instalācijas lokāciju failu sistēmā.
 #[tauri::command]
 pub async fn update_blender_version_installation_location(
-    repo_directory_path: std::path::PathBuf
+    state: tauri::State<'_, AppState>,
+    id: String,
+    repo_directory_path: std::path::PathBuf,
+    is_default: bool,
 ) -> Result<(), String> {
-    Ok(())
+    let repository = BlenderRepoPathRepository::new(&state.pool);
+    let mut entry = BlenderRepoPath {
+        id: id.clone(),
+        repo_directory_path: repo_directory_path.to_string_lossy().to_string(),
+        is_default,
+        created: Utc::now().to_rfc3339(),
+        modified: Utc::now().to_rfc3339(),
+        accessed: Utc::now().to_rfc3339(),
+    };
+    if is_default == true 
+    {
+        entry.is_default = false;
+        match repository.update(&entry).await {
+            Ok(_) => Ok(()),
+            Err(err) => return Err(String::new()),
+        }
+    }
+    else
+    {
+        let results = match repository.fetch(None, None).await {
+            Ok(val) => val,
+            Err(err) => return Err(String::new()),
+        };
+        for mut entry in results {
+            let new_default = entry.id == id; // TODO fix.
+            if entry.is_default != new_default
+            {
+                entry.is_default = new_default;
+                match repository.update(&entry).await {
+                    Ok(_) => {},
+                    Err(err) => return Err(String::new()),
+                }
+            }
+        }
+        Ok(())
+    }
 }
 
-pub fn get_database_url(app: &AppHandle) -> Result<String, String> {
-    let base_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    let db_path = base_dir.join("test.db");
-    Ok(format!("sqlite://{}", db_path.to_string_lossy()))
+/// Saņemt Blender versiju lejupielādes/instalācijas lokāciju failu sistēmā.
+#[tauri::command]
+pub async fn fetch_blender_version_installation_locations(
+    state: tauri::State<'_, AppState>,
+    id: Option<String>,
+    limit: Option<i64>,
+) -> Result<Vec<BlenderRepoPath>, String> {
+    let repository = BlenderRepoPathRepository::new(&state.pool);
+    let results = match repository.fetch(id.as_deref(), limit).await {
+        Ok(val) => val,
+        Err(err) => return Err(String::new()),
+    };
+    Ok(results)
 }
 
-// #[tauri::command]
-// pub async fn insert_user(
-//     app: AppHandle,
-//     name: String,
-//     email: Option<String>,
-// ) -> Result<(), String> {
-//     let db_url = get_database_url(&app)?; // (I show below where to put this helper)
-//     let pool = establish_connection(&db_url)
-//         .await
-//         .map_err(|e| e.to_string())?;
-//     let repo = UserRepository::new(&pool);
-//     repo.insert_user(&name, email.as_deref())
-//         .await
-//         .map_err(|e| e.to_string())
-// }
-
-// #[tauri::command]
-// pub async fn get_users(app: AppHandle) -> Result<Vec<User>, String> {
-//     let db_url = get_database_url(&app)?;
-//     let pool = establish_connection(&db_url)
-//         .await
-//         .map_err(|e| e.to_string())?;
-//     let repo = UserRepository::new(&pool);
-//     repo.fetch_all_users().await.map_err(|e| e.to_string())
-// }
+// Izdzēst Blender versiju lejupielādes/instalācijas lokāciju failu sistēmā.
+#[tauri::command]
+pub async fn delete_blender_version_installation_location(
+    state: tauri::State<'_, AppState>,
+    id: String,
+) -> Result<(), String> {
+    let repository = BlenderRepoPathRepository::new(&state.pool);
+    match repository.delete(&id).await {
+        Ok(_) => Ok(()),
+        Err(err) => return Err(String::new()),
+    }
+}

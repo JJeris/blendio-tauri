@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{prelude::FromRow, SqlitePool};
 
-#[derive(Debug, Serialize, Deserialize, FromRow)]
+#[derive(Default, Debug, Serialize, Deserialize, FromRow)]
 pub struct BlenderRepoPath {
     pub id: String,
     pub repo_directory_path: String,

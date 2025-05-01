@@ -12,11 +12,18 @@ export async function downloadFile(url, filePath, buttonId) {
         await download(url, filePath, ({ progress, total }) => {
             accumulated += progress;
             const percent = Math.floor((accumulated / total) * 100);
-            if (button) button.textContent = `Downloading... ${percent}%`;
+            const button = document.getElementById(buttonId);
+            if (button)  {
+                button.textContent = `Downloading... ${percent}%`;
+                button.disabled = true;
+            }
         });
 
-        // Reset to original UI
-        if (button) button.textContent = originalText;
+        const finishedButton = document.getElementById(buttonId);
+        if (finishedButton) {
+            finishedButton.textContent = originalText;
+            finishedButton.disabled = false;
+        } 
     } catch (e) {
         console.error("Download failed:", e);
         if (button) button.textContent = "Error";

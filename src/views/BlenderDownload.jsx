@@ -1,20 +1,58 @@
 // src/views/BlenderDownload.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDownloadBlenderVersionStore } from "../stores/blender_version";
 import { invoke } from "@tauri-apps/api/core";
 import { downloadFile } from "../utils/web";
+import { listen } from "@tauri-apps/api/event";
 
 export default function BlenderDownload() {
   const downloadBlenderVersionStore = useDownloadBlenderVersionStore();
+  const pendingDownloadRef = useRef(null);
+
+  useEffect(() => {
+    const unlisten = listen("download-path-selected", async (event) => {
+      const selectedPath = event.payload?.path;
+      const pending = pendingDownloadRef.current;
+      if (selectedPath && pending) {
+        const { url, fileName, buttonId } = pending;
+        await downloadFile(
+          url,
+          `${selectedPath}\\${fileName}`,
+          buttonId
+        );
+        pendingDownloadRef.current = null;
+      }
+    });
+
+    return () => {
+      unlisten.then((off) => off());
+    };
+  }, []);
 
   useEffect(() => {
     async function loadBlenderBuilds() {
       const builds = await invoke("get_downloadable_blender_version_data");
       downloadBlenderVersionStore.setDownloadBlenderVersion(builds);
     }
-
     loadBlenderBuilds();
   }, []);
+
+  const handleOpenPopup = async () => {
+    try {
+      await invoke("open_download_popup");
+    } catch (e) {
+      console.error("Failed to open popup:", e);
+    }
+  };
+
+  const download = async (url, fileName, buttonId) => {
+    pendingDownloadRef.current = { url, fileName, buttonId };
+    try {
+      await handleOpenPopup()
+    } catch (error) {
+      console.error("Failed to fetch paths:", error);
+    }
+  }
 
   return (
     <div className="p-4">
@@ -40,7 +78,7 @@ export default function BlenderDownload() {
         </thead>
         <tbody>
           {downloadBlenderVersionStore.downloadBlenderVersion.map((build, index) => {
-            const buttonId = `download-btn-${index}`;
+            const buttonId = `download-btn-${build.file_name}`;
             return (
               <tr key={index}>
                 <td className="border p-2">{build.version}</td>
@@ -60,13 +98,7 @@ export default function BlenderDownload() {
                   <button
                     id={buttonId}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
-                    onClick={() =>
-                      downloadFile(
-                        build.url,
-                        `C:\\blenderbaseapps\\${build.file_name}`,
-                        buttonId
-                      )
-                    }
+                    onClick={() => download(build.url, build.file_name, buttonId)}
                   >
                     Download
                   </button>

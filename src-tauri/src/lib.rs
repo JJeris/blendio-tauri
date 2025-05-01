@@ -13,32 +13,44 @@ mod project_file;
 mod python_script;
 
 use crate::blender_version::*;
+use crate::file_system_utility::*;
 use crate::project_file::*;
 use crate::python_script::*;
 
+#[derive(Debug)]
+pub struct AppState {
+    pub pool: sqlx::SqlitePool,
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
+pub async fn run() {
+    let mut base_dir = dirs::data_dir().expect("Failed to get data dir");
+    base_dir.push("com.bakalaurs.blendio-tauri");
+    std::fs::create_dir_all(&base_dir).expect("Failed to create app data directory");
+
+    base_dir.push("test.db");
+    if !base_dir.exists() {
+        std::fs::File::create(&base_dir).expect("Failed to create database file");
+    }
+
+    let db_url = format!("sqlite://{}", base_dir.to_string_lossy());
+
+    let pool = sqlx::SqlitePool::connect(&db_url)
+        .await
+        .expect("Failed to connect to database");
+
+    sqlx::migrate!()
+        .run(&pool)
+        .await
+        .expect("Failed to run database migrations");
+
+    let app_state = AppState { pool };
+
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .manage(app_state)
         .plugin(tauri_plugin_upload::init())
         .setup(|app| {
-            // Set up database manually
-            tauri::async_runtime::spawn(async move {
-                let mut base_dir = dirs::data_dir().expect("Failed to get data dir");
-                base_dir.push("com.bakalaurs.blendio-tauri");
-                std::fs::create_dir_all(&base_dir).expect("Failed to create app data directory");
-                base_dir.push("test.db");
-                if !base_dir.exists() {
-                    std::fs::File::create(&base_dir).expect("Failed to create database file");
-                }
-                let db_url = format!("sqlite://{}", base_dir.to_string_lossy());
-                let pool = sqlx::SqlitePool::connect(&db_url)
-                    .await
-                    .expect("Failed to connect to database");
-                sqlx::migrate!()
-                    .run(&pool)
-                    .await
-                    .expect("Failed to run database migrations");
-            });
             // Opens the developer tools when run in debug.
             let window = app.get_webview_window("main").unwrap();
             #[cfg(debug_assertions)]
@@ -68,8 +80,12 @@ pub fn run() {
             insert_recently_used_python_script_file_paths,
             find_python_script_file_in_local_file_system,
             //
-            // insert_user,
-            // get_users,
+            insert_blender_version_installation_location,
+            update_blender_version_installation_location,
+            fetch_blender_version_installation_locations,
+            delete_blender_version_installation_location,
+            //
+            open_download_popup
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

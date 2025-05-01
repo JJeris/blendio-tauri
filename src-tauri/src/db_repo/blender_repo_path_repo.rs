@@ -1,6 +1,7 @@
 use crate::models::BlenderRepoPath;
 use sqlx::SqlitePool;
 
+// TODO might need to update this? Like remove the pool since im using the one in lib.rs
 pub struct BlenderRepoPathRepository<'a> {
     pub pool: &'a SqlitePool,
 }
@@ -56,6 +57,14 @@ impl<'a> BlenderRepoPathRepository<'a> {
         )
         .execute(self.pool)
         .await?;
+        Ok(())
+    }
+
+    pub async fn delete(&self, id: &str) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM blender_repo_paths WHERE id = ?")
+            .bind(id)
+            .execute(self.pool)
+            .await?;
         Ok(())
     }
 }

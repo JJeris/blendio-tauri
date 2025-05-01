@@ -4,7 +4,7 @@ import { invoke } from '@tauri-apps/api/core';
 const Home = () => {
   return (
     <div>
-      Hello world
+      Home
     </div>
   );
 };
