@@ -17,7 +17,7 @@ CREATE TABLE project_files (
     id TEXT PRIMARY KEY NOT NULL,
     file_path TEXT NOT NULL,
     file_name TEXT NOT NULL,
-    associated_series TEXT NOT NULL,
+    associated_series_json TEXT NOT NULL DEFAULT '[]',
     last_used_blender_version_id TEXT NULL,
     created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

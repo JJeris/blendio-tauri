@@ -1,0 +1,14 @@
+{
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "create-new-project-file-popup",
+    "description": "Capability for the create new project file popup window",
+    "windows": [
+      "create-new-project-file-popup"
+    ],
+    "permissions": [
+      "core:default",
+      "core:window:default",
+      "core:window:allow-close"
+    ]
+  }
+  

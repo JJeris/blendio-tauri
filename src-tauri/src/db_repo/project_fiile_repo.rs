@@ -12,11 +12,11 @@ impl<'a> ProjectFileRepository<'a> {
 
     pub async fn insert(&self, entry: &ProjectFile) -> Result<(), sqlx::Error> {
         sqlx::query!(
-            "INSERT INTO project_files (id, file_path, file_name, associated_series, last_used_blender_version_id) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO project_files (id, file_path, file_name, associated_series_json, last_used_blender_version_id) VALUES (?, ?, ?, ?, ?) ON CONFLICT(file_path) DO NOTHING",
             entry.id,
             entry.file_path,
             entry.file_name,
-            entry.associated_series,
+            entry.associated_series_json,
             entry.last_used_blender_version_id
         )
         .execute(self.pool)
@@ -28,6 +28,7 @@ impl<'a> ProjectFileRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
+        file_path: Option<&str>
     ) -> Result<Vec<ProjectFile>, sqlx::Error> {
         if let Some(id) = id {
             let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE id = ?")
@@ -40,6 +41,12 @@ impl<'a> ProjectFileRepository<'a> {
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
+        } else if let Some(file_path) = file_path {
+            let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE file_path = ?")
+                .bind(file_path)
+                .fetch_all(self.pool)
+                .await?;
+            Ok(item)
         } else {
             sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files")
                 .fetch_all(self.pool)
@@ -49,15 +56,23 @@ impl<'a> ProjectFileRepository<'a> {
 
     pub async fn update(&self, file: &ProjectFile) -> Result<(), sqlx::Error> {
         sqlx::query!(
-            "UPDATE project_files SET file_path = ?, file_name = ?, associated_series = ?, last_used_blender_version_id = ?, modified = CURRENT_TIMESTAMP, accessed = CURRENT_TIMESTAMP WHERE id = ?",
+            "UPDATE project_files SET file_path = ?, file_name = ?, associated_series_json = ?, last_used_blender_version_id = ?, modified = CURRENT_TIMESTAMP, accessed = CURRENT_TIMESTAMP WHERE id = ?",
             file.file_path,
             file.file_name,
-            file.associated_series,
+            file.associated_series_json,
             file.last_used_blender_version_id,
             file.id
         )
         .execute(self.pool)
         .await?;
+        Ok(())
+    }
+
+    pub async fn delete(&self, id: &str) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM project_files WHERE id = ?")
+            .bind(id)
+            .execute(self.pool)
+            .await?;
         Ok(())
     }
 }

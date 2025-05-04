@@ -12,7 +12,7 @@ impl<'a> PythonScriptRepository<'a> {
 
     pub async fn insert(&self, entry: &PythonScript) -> Result<(), sqlx::Error> {
         sqlx::query!(
-            "INSERT INTO python_scripts (id, script_file_path) VALUES (?, ?)",
+            "INSERT INTO python_scripts (id, script_file_path) VALUES (?, ?) ON CONFLICT(script_file_path) DO NOTHING",
             entry.id,
             entry.script_file_path
         )
@@ -25,6 +25,7 @@ impl<'a> PythonScriptRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
+        script_file_path: Option<String>
     ) -> Result<Vec<PythonScript>, sqlx::Error> {
         if let Some(id) = id {
             let item =
@@ -38,6 +39,12 @@ impl<'a> PythonScriptRepository<'a> {
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
+        } else if let Some(script_file_path) = script_file_path {
+            let item = sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts WHERE script_file_path = ?")
+                .bind(script_file_path)
+                .fetch_all(self.pool)
+                .await?;
+            Ok(item)
         } else {
             sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts")
                 .fetch_all(self.pool)

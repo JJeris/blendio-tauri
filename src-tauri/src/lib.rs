@@ -63,21 +63,28 @@ pub async fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             //
-            insert_installed_blender_version_data,
-            run_blender_version,
+            insert_installed_blender_version,
+            update_installed_blender_version,
+            fetch_installed_blender_versions,
+            uninstall_and_delete_installed_blender_version_data,
+            launch_blender_version_with_launch_args,
             get_downloadable_blender_version_data,
             download_and_install_blender_version,
-            uninstall_blender_version,
             insert_blender_version_installation_location,
             //
-            insert_blend_file_data,
+            insert_blend_file,
+            insert_and_refresh_blend_files,
+            fetch_blend_files,
             open_blend_file,
-            create_blend_file,
+            create_new_project_file,
             delete_blend_file,
-            find_blend_file_in_local_file_system,
-            create_blend_file_archive,
+            reveal_project_file_in_local_file_system,
+            create_project_file_archive_file,
+            insert_launch_argument,
+            fetch_launch_arguments,
             //
-            insert_recently_used_python_script_file_paths,
+            insert_python_script,
+            fetch_python_scripts,
             find_python_script_file_in_local_file_system,
             //
             insert_blender_version_installation_location,
@@ -85,7 +92,7 @@ pub async fn run() {
             fetch_blender_version_installation_locations,
             delete_blender_version_installation_location,
             //
-            open_download_popup
+            instance_popup_window
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

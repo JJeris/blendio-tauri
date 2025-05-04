@@ -1,0 +1,13 @@
+{
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "launch-project-file-popup",
+    "description": "Capability for the open project file popup window",
+    "windows": [
+      "launch-project-file-popup"
+    ],
+    "permissions": [
+      "core:default",
+      "core:window:default",
+      "core:window:allow-close"
+    ]
+  }

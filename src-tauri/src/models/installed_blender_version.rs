@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{prelude::FromRow, SqlitePool};
 
-#[derive(Debug, Serialize, Deserialize, FromRow)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, FromRow)]
 pub struct InstalledBlenderVersion {
     pub id: String,
     pub version: String,

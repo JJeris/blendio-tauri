@@ -14,13 +14,17 @@ export default function BlenderDownload() {
       const selectedPath = event.payload?.path;
       const pending = pendingDownloadRef.current;
       if (selectedPath && pending) {
-        const { url, fileName, buttonId } = pending;
+        const { build, url, fileName, buttonId } = pending;
+        pendingDownloadRef.current = null;
         await downloadFile(
           url,
           `${selectedPath}\\${fileName}`,
           buttonId
         );
-        pendingDownloadRef.current = null;
+        const installationDirectoryPath = await invoke("download_and_install_blender_version", {
+          archiveFilePath: `${selectedPath}\\${fileName}`,
+          downloadableBlenderVersion: build,
+        });
       }
     });
 
@@ -39,14 +43,19 @@ export default function BlenderDownload() {
 
   const handleOpenPopup = async () => {
     try {
-      await invoke("open_download_popup");
+      // await invoke("open_download_popup");
+      await invoke("instance_popup_window", {
+        label: "download-popup",
+        title: "Choose Download Location",
+        urlPath: "popup/DownloadPopup"
+      });
     } catch (e) {
       console.error("Failed to open popup:", e);
     }
   };
 
-  const download = async (url, fileName, buttonId) => {
-    pendingDownloadRef.current = { url, fileName, buttonId };
+  const download = async (build, url, fileName, buttonId) => {
+    pendingDownloadRef.current = { build, url, fileName, buttonId };
     try {
       await handleOpenPopup()
     } catch (error) {
@@ -98,7 +107,7 @@ export default function BlenderDownload() {
                   <button
                     id={buttonId}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
-                    onClick={() => download(build.url, build.file_name, buttonId)}
+                    onClick={() => download(build, build.url, build.file_name, buttonId)}
                   >
                     Download
                   </button>

@@ -1,0 +1,2 @@
+-- Add up migration script here
+CREATE UNIQUE INDEX idx_unique_installed_blender_version_executable_file_path ON installed_blender_versions(executable_file_path);
