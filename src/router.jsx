@@ -7,6 +7,7 @@ import InstalledBlenderVersions from './views/InstalledBlenderVersions';
 import ProjectFiles from './views/ProjectFiles';
 import CreateBlendPopup from './popup/CreateBlendPopup';
 import LaunchBlendPopup from './popup/LaunchBlendPopup';
+import LaunchBlenderPopup from './popup/LaunchBlenderPopup';
 
 const AppRouter = () => (
   <Routes>
@@ -18,6 +19,7 @@ const AppRouter = () => (
     <Route path="/popup/DownloadPopup" element={<DownloadPopup />} />
     <Route path="/popup/CreateBlendPopup" element={<CreateBlendPopup />} />
     <Route path="/popup/LaunchBlendPopup" element={<LaunchBlendPopup />} />
+    <Route path="/popup/LaunchBlenderPopup" element={<LaunchBlenderPopup />} />
 
   </Routes>
 );

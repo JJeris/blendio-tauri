@@ -9,20 +9,21 @@ const CreateBlendPopup = () => {
     const [selectedVersionId, setSelectedVersionId] = useState(null);
 
     useEffect(() => {
-        const fetchVersions = async () => {
-            const result = await invoke("fetch_installed_blender_versions", {
-                id: null,
-                limit: null,
-                installedBlenderVersions: null
-            });
-            setVersions(result);
-        };
         fetchVersions();
     }, []);
 
     const closeWindow = async () => {
         const appWindow = getCurrentWindow();
         await appWindow.close();
+    };
+
+    const fetchVersions = async () => {
+        const result = await invoke("fetch_installed_blender_versions", {
+            id: null,
+            limit: null,
+            installedBlenderVersions: null
+        });
+        setVersions(result);
     };
 
     const handleCreate = async () => {

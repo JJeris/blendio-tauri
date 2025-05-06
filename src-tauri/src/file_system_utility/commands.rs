@@ -32,7 +32,6 @@ pub async fn instance_popup_window(
     }
 }
 
-#[tauri::command]
 pub async fn extract_archive(
     archive_file_path: std::path::PathBuf,
 ) -> Result<std::path::PathBuf, String> {
@@ -79,7 +78,6 @@ pub async fn extract_archive(
     Ok(extract_dir.join(archive_dir))
 }
 
-#[tauri::command]
 pub async fn delete_file(
     file_path: std::path::PathBuf,
 ) -> Result<(), String> {
@@ -89,7 +87,6 @@ pub async fn delete_file(
     }
 }
 
-#[tauri::command]
 pub async fn delete_directory(
     directory_path: std::path::PathBuf,
 ) -> Result<(), String> {

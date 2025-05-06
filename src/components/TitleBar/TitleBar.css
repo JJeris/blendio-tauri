@@ -1,15 +1,21 @@
 .titlebar {
-    height: 30px;
-    background-color: #1e1e1e;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    /* -webkit-user-select: none; */
-    /* -webkit-app-region: drag; */
-  }
-  
-  .title {
-    font-weight: bold;
-  }
-  
+  height: 30px;
+  background-color: #1e1e1e;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: white;
+}
+
+.navlink {
+  background-color: transparent;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.navlink:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

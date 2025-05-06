@@ -11,11 +11,13 @@ mod blender_version;
 mod file_system_utility;
 mod project_file;
 mod python_script;
+mod launch_argument;
 
 use crate::blender_version::*;
 use crate::file_system_utility::*;
 use crate::project_file::*;
 use crate::python_script::*;
+use crate::launch_argument::*;
 
 #[derive(Debug)]
 pub struct AppState {
@@ -64,6 +66,7 @@ pub async fn run() {
         .invoke_handler(tauri::generate_handler![
             //
             insert_installed_blender_version,
+            insert_and_refresh_installed_blender_versions,
             update_installed_blender_version,
             fetch_installed_blender_versions,
             uninstall_and_delete_installed_blender_version_data,
@@ -80,17 +83,20 @@ pub async fn run() {
             delete_blend_file,
             reveal_project_file_in_local_file_system,
             create_project_file_archive_file,
-            insert_launch_argument,
-            fetch_launch_arguments,
             //
             insert_python_script,
             fetch_python_scripts,
-            find_python_script_file_in_local_file_system,
+            delete_python_script,
             //
             insert_blender_version_installation_location,
             update_blender_version_installation_location,
             fetch_blender_version_installation_locations,
             delete_blender_version_installation_location,
+            //
+            insert_launch_argument,
+            update_launch_argument,
+            fetch_launch_arguments,
+            delete_launch_argument,
             //
             instance_popup_window
         ])

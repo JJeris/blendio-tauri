@@ -19,8 +19,11 @@ pub async fn insert_blend_file(
     let entry = ProjectFile {
         id: Uuid::new_v4().to_string(),
         file_path: file_path.to_string_lossy().to_string(), 
-        file_name: file_path.file_name().unwrap().to_string_lossy().to_string(), // TODO fix.
-        associated_series_json: serde_json::to_string(&vec![""]).unwrap(), // TODO fix.
+        file_name: match file_path.file_name() {
+            Some(val) => val.to_string_lossy().to_string(),
+            None => return Err(String::new()),
+        },
+        associated_series_json: serde_json::to_string(&Vec::<String>::new()).unwrap(),
         last_used_blender_version_id: None,
         created: Utc::now().to_rfc3339(),
         modified: Utc::now().to_rfc3339(),
@@ -229,10 +232,6 @@ pub async fn open_blend_file(
     launch_arguments_id: Option<String>,
     python_script_id: Option<String>
 ) -> Result<(), String> {
-    // println!("{:?}", id);
-    // println!("{:?}", installed_blender_version_id);
-    // println!("{:?}", launch_arguments_id);
-    // println!("{:?}", python_script_id);
     // Update project file last used Blender version.
     let project_file_repository = ProjectFileRepository::new(&state.pool);
     let installed_blender_version_repository = InstalledBlenderVersionRepository::new(&state.pool);
@@ -245,7 +244,8 @@ pub async fn open_blend_file(
     if project_file_entry_list.is_empty() {
         return Err(String::new())
     }
-    let project_file_entry = project_file_entry_list.remove(0);
+    let mut project_file_entry = project_file_entry_list.remove(0);
+    project_file_entry.last_used_blender_version_id = Some(installed_blender_version_id.clone());
     match project_file_repository.update(&project_file_entry).await {
         Ok(_) => {},
         Err(err) => return Err(String::new()),
@@ -306,7 +306,6 @@ pub async fn open_blend_file(
         }
         None => {}
     }
-    println!("{:?}, {:?}", installed_blender_version_entry.executable_file_path, final_launch_args);
     match file_system_utility::launch_executable(installed_blender_version_entry.executable_file_path.into(), Some(final_launch_args)) {
         Ok(_) => Ok(()),
         Err(_) => return Err(String::new()),
@@ -397,62 +396,4 @@ pub async fn create_project_file_archive_file(
         Ok(_) => Ok(()),
         Err(err) => return Err(String::new()),
     }
-}
-
-// Saglabāt launch argument string vērtību
-#[tauri::command]
-pub async fn insert_launch_argument(
-    state: tauri::State<'_, AppState>,
-    argument_string: String,
-    project_file_id: Option<String>,
-    python_script_id: Option<String>
-) -> Result<String, String> {
-    let repository = LaunchArgumentRepository::new(&state.pool);
-    let mut results = match repository.fetch(None, None, Some(&argument_string)).await {
-        Ok(val) => val,
-        Err(err) => return Err(format!("Failed to fetch existing args: {:?}", err)),
-    };
-
-    if !results.is_empty() {
-        let mut existing_entry = results.remove(0);
-        existing_entry.accessed = Utc::now().to_rfc3339();
-        existing_entry.modified = Utc::now().to_rfc3339();
-        match repository.update(&existing_entry).await {
-            Ok(_) => return Ok(existing_entry.id),
-            Err(err) => return Err(format!("Failed to update entry: {:?}", err)),
-        }
-    }
-
-    let entry = LaunchArgument{ 
-        id: Uuid::new_v4().to_string(), 
-        is_default: false, 
-        argument_string: argument_string, 
-        last_used_project_file_id: project_file_id, 
-        last_used_python_script_id: python_script_id, 
-        created: Utc::now().to_rfc3339(),
-        modified: Utc::now().to_rfc3339(),
-        accessed: Utc::now().to_rfc3339(), 
-    };
-    match repository.insert(&entry).await {
-        Ok(_) => {},
-        Err(err) => return Err(format!("{:?}", err)),
-    }
-    Ok(entry.id)
-}
-
-#[tauri::command]
-pub async fn fetch_launch_arguments(
-    state: tauri::State<'_, AppState>,
-    id: Option<String>,
-    limit: Option<i64>,
-    argument_string: Option<String>
-) -> Result<Vec<LaunchArgument>, String> {
-    let repository = LaunchArgumentRepository::new(&state.pool);
-    let mut results = match repository.fetch(id.as_deref(), limit, argument_string.as_deref()).await {
-        Ok(val) => val,
-        Err(err) => return Err(format!("{:?}", err)),
-    };
-
-    results.sort_by(|a, b| b.accessed.cmp(&a.accessed)); // DESC
-    Ok(results)
 }

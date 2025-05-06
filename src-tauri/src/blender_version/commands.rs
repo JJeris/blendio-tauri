@@ -3,13 +3,14 @@
 use std::{fs::File, result};
 
 use chrono::Utc;
+use regex::Regex;
 use tauri::{utils::platform::Target, AppHandle, Manager};
 use tauri_plugin_dialog::DialogExt;
 use uuid::Uuid;
 use zip::ZipArchive;
 
 use crate::{
-    db_context::establish_connection, db_repo::{BlenderRepoPathRepository, InstalledBlenderVersionRepository}, file_system_utility, models::{BlenderRepoPath, DownloadableBlenderVersion, InstalledBlenderVersion}, AppState
+    db_context::establish_connection, db_repo::{BlenderRepoPathRepository, InstalledBlenderVersionRepository, LaunchArgumentRepository, PythonScriptRepository}, file_system_utility, launch_argument, models::{BlenderRepoPath, DownloadableBlenderVersion, InstalledBlenderVersion}, AppState
 };
 
 /// Saglabāt instalētu Blender versiju datus
@@ -19,38 +20,43 @@ pub async fn insert_installed_blender_version(
     executable_file_path: std::path::PathBuf
 ) -> Result<(), String> {
     let parent_dir = match executable_file_path.parent() {
-        Some(val) => val.to_string_lossy().to_string(),
+        Some(val) => val,
         None => return Err(String::new()),
     };
     // TODO identify these values that are left as String::new(). Preferably identify this from the executable_file_path.
-    // let dir_name = parent_dir.file_name()
-    // .map(|n| n.to_string_lossy().to_string())
-    // .unwrap_or_default();
+    let dir_name = match parent_dir.file_name() {
+        Some(val) => val.to_string_lossy().to_string(),
+        None => return Err(String::new()),
+    };
 
-    // // Try to extract version and variant_type using regex
-    // let (version, variant_type) = {
-    //     let re = Regex::new(r"blender-(?P<version>\d+\.\d+(?:\.\d+)?)(?:[-+](?P<variant>.*))?").unwrap();
-    //     if let Some(caps) = re.captures(&dir_name) {
-    //         let version = caps.name("version").map(|m| m.as_str().to_string()).unwrap_or_default();
-    //         let variant_type = caps.name("variant").map(|m| m.as_str().to_string()).unwrap_or_default();
-    //         (version, variant_type)
-    //     } else {
-    //         (String::new(), String::new())
-    //     }
-    // };
+    // Try to extract version and variant_type using regex
+    let (version, variant_type) = {
+        let re = match Regex::new(r"blender-(?P<version>\d+\.\d+(?:\.\d+)?)-(?P<variant>[^\-+]+)") {
+            Ok(val) => val,
+            Err(err) => return Err(String::new()),
+        };
+        if let Some(caps) = re.captures(&dir_name) {
+            let version = caps.name("version").map(|m| m.as_str().to_string()).unwrap_or_default();
+            let variant_type = caps.name("variant").map(|m| m.as_str().to_string()).unwrap_or_default();
+            (version, variant_type)
+        } else {
+            (String::new(), String::new())
+        }
+    };
     
     let entry = InstalledBlenderVersion {
         id: Uuid::new_v4().to_string(),
-        version: String::new(),
-        variant_type: String::new(),
+        version: version,
+        variant_type: variant_type,
         download_url: None,
         is_default: false,
-        installation_directory_path: parent_dir,
+        installation_directory_path: parent_dir.to_string_lossy().to_string(),
         executable_file_path: executable_file_path.to_string_lossy().to_string(),
         created: Utc::now().to_rfc3339(),
         modified: Utc::now().to_rfc3339(),
         accessed: Utc::now().to_rfc3339(), 
     };
+    println!("{:?}", entry);
     let repository = InstalledBlenderVersionRepository::new(&state.pool);
     match repository.insert(&entry).await {
         Ok(_) => Ok(()),
@@ -72,6 +78,7 @@ pub async fn insert_and_refresh_installed_blender_versions(
     let installed_blender_version_repo = InstalledBlenderVersionRepository::new(&state.pool);
 
     for repo_path in blender_repo_paths {
+        println!("{:?}", repo_path);
         let directory_entries = match std::fs::read_dir(repo_path.repo_directory_path) {
             Ok(val) => val,
             Err(err) => return Err(String::new())
@@ -88,6 +95,7 @@ pub async fn insert_and_refresh_installed_blender_versions(
             if !launcher_path.exists() {
                 continue;
             }
+            println!("{:?}", launcher_path);
             let existing_entries = match installed_blender_version_repo.fetch(None, None, Some(&launcher_path.to_string_lossy().to_string())).await {
                 Ok(val) => val,
                 Err(err) => return Err(String::new())
@@ -100,10 +108,6 @@ pub async fn insert_and_refresh_installed_blender_versions(
                 Err(err) => return Err(String::new())
             }
         }
-        // TODO if directory, check if .../blender-launcher.exe exists.
-        // TODO try add cfg target_os is this method would really differ from Windows to linux and macos (primarily Windows and Linux).
-        // TODO if exists, call the insert_installed_blender_version method
-        // TODO first check if such a Blender version is already registerd (check the paths). If so, then dont insert and dont update. Leave as is, and go to the next step.
     } 
     Ok(())
 }
@@ -190,20 +194,70 @@ pub async fn uninstall_and_delete_installed_blender_version_data(
 pub async fn launch_blender_version_with_launch_args(
     state: tauri::State<'_, AppState>,
     id: Option<String>,
-    launch_args: Option<Vec<String>>,
-    project_file_id: Option<std::path::PathBuf>,
+    launch_arguments_id: Option<String>,
+    python_script_id: Option<String>
 ) -> Result<(), String> {
-    let repository = InstalledBlenderVersionRepository::new(&state.pool);
-    let instance = match repository.fetch(id.as_deref(), None, None).await {
-        Ok(val) => val[0].clone(),
+    let installed_blender_version_repository = InstalledBlenderVersionRepository::new(&state.pool);
+    let launch_argument_repository = LaunchArgumentRepository::new(&state.pool);
+    let python_script_repository = PythonScriptRepository::new(&state.pool);
+    
+    let mut installed_blender_version_list = match installed_blender_version_repository.fetch(id.as_deref(), None, None).await {
+        Ok(val) => val,
         Err(_) => return Err(String::new()),
     };
-    match repository.update(&instance).await {
+    let instance = installed_blender_version_list.remove(0);
+    match installed_blender_version_repository.update(&instance).await {
         Ok(_) => {},
         Err(err) => return Err(String::new()),
     }
-    file_system_utility::launch_executable(std::path::PathBuf::from(instance.executable_file_path), launch_args)?;
-    Ok(())
+    let mut final_launch_args: Vec<String> = vec![];
+    match launch_arguments_id {
+        Some(arg_id) => {
+            let mut launch_argument_entry_list = match launch_argument_repository.fetch(Some(&arg_id), None, None).await {
+                Ok(val) => val,
+                Err(_) => return Err(String::new()),
+            };
+            if launch_argument_entry_list.is_empty() {
+                return Err(String::new());
+            }
+            let entry = launch_argument_entry_list.remove(0);
+            match launch_argument_repository.update(&entry).await {
+                Ok(_) => {},
+                Err(err) => return Err(String::new()),
+            }
+            let parsed_args: Vec<String> = entry.argument_string.split_whitespace().map(|s| s.to_string()).collect();
+            final_launch_args.extend(parsed_args);
+        }
+        None => {}
+    }
+    match python_script_id {
+        Some(script_id) => {
+            let mut python_script_entry_list = match python_script_repository.fetch(Some(&script_id), None, None).await {
+                Ok(val) => val,
+                Err(_) => return Err(String::new()),
+            };
+            if python_script_entry_list.is_empty() {
+                return Err(String::new());
+            }
+            let entry = python_script_entry_list.remove(0);
+            match python_script_repository.update(&entry).await {
+                Ok(_) => {},
+                Err(err) => return Err(String::new()),
+            }
+            if !final_launch_args.contains(&"--python".to_string()) {
+                final_launch_args.push("--python".to_string());
+                final_launch_args.push(entry.script_file_path);
+            } else if final_launch_args.contains(&"--python".to_string()) {
+                final_launch_args.push(entry.script_file_path);
+            }
+        }
+        None => {}
+    }
+    println!("{:?}, {:?}", instance.executable_file_path, final_launch_args);
+    match file_system_utility::launch_executable(std::path::PathBuf::from(instance.executable_file_path), Some(final_launch_args)) {
+        Ok(_) => Ok(()),
+        Err(err) => return Err(String::new()),
+    }
 }
 
 /// Saglabāt lejupielādējamu Blender versiju datus
@@ -325,18 +379,17 @@ pub async fn insert_blender_version_installation_location(
 pub async fn update_blender_version_installation_location(
     state: tauri::State<'_, AppState>,
     id: String,
-    repo_directory_path: std::path::PathBuf, // todo fix.
     is_default: bool,
 ) -> Result<(), String> {
     let repository = BlenderRepoPathRepository::new(&state.pool);
-    let mut entry = BlenderRepoPath {
-        id: id.clone(),
-        repo_directory_path: repo_directory_path.to_string_lossy().to_string(),
-        is_default,
-        created: Utc::now().to_rfc3339(),
-        modified: Utc::now().to_rfc3339(),
-        accessed: Utc::now().to_rfc3339(),
+    let mut results = match repository.fetch(Some(&id), None).await {
+        Ok(val) => val,
+        Err(err) => return Err(String::new()),
     };
+    if results.is_empty() {
+        return Err(String::new())
+    }
+    let mut entry = results.remove(0);
     if is_default == true 
     {
         entry.is_default = false;
@@ -352,7 +405,7 @@ pub async fn update_blender_version_installation_location(
             Err(err) => return Err(String::new()),
         };
         for mut entry in results {
-            let new_default = entry.id == id; // TODO fix.
+            let new_default = entry.id == id;
             if entry.is_default != new_default
             {
                 entry.is_default = new_default;
@@ -387,8 +440,32 @@ pub async fn delete_blender_version_installation_location(
     state: tauri::State<'_, AppState>,
     id: String,
 ) -> Result<(), String> {
-    let repository = BlenderRepoPathRepository::new(&state.pool);
-    match repository.delete(&id).await {
+    let blender_repo_path_repository = BlenderRepoPathRepository::new(&state.pool);
+    let installed_blender_version_repository = InstalledBlenderVersionRepository::new(&state.pool);
+    let mut blender_repo_path_list = match blender_repo_path_repository.fetch(Some(&id), None).await {
+        Ok(val) => val,
+        Err(err) => return Err(String::new()),
+    };
+    if blender_repo_path_list.is_empty() {
+        return Err(String::new());
+    }
+    let blender_repo_path_entry = blender_repo_path_list.remove(0);
+    let installed_blender_version_list = match installed_blender_version_repository.fetch(None, None, None).await {
+        Ok(val) => val,
+        Err(err) => return Err(String::new()),
+    };
+    println!("#################################");
+    for version in installed_blender_version_list {
+        println!("{:?}", version.installation_directory_path);
+        println!("{:?}", blender_repo_path_entry.repo_directory_path);
+        if version.installation_directory_path.starts_with(&blender_repo_path_entry.repo_directory_path) {
+            match installed_blender_version_repository.delete(&version.id).await {
+                Ok(_) => {},
+                Err(err) => return Err(String::new()),
+            }
+        }
+    } 
+    match blender_repo_path_repository.delete(&id).await {
         Ok(_) => Ok(()),
         Err(err) => return Err(String::new()),
     }

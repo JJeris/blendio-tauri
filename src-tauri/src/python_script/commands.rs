@@ -45,6 +45,7 @@ pub async fn insert_python_script(
     }
 }
 
+
 #[tauri::command]
 pub async fn fetch_python_scripts(
     state: tauri::State<'_, AppState>,
@@ -62,11 +63,14 @@ pub async fn fetch_python_scripts(
     Ok(results)
 }
 
-/// Atrast Python skripta failu lokālajā failu sistēmā
 #[tauri::command]
-pub async fn find_python_script_file_in_local_file_system(
-    app: AppHandle,
+pub async fn delete_python_script(
     state: tauri::State<'_, AppState>,
+    id: String,
 ) -> Result<(), String> {
-    Ok(())
+    let repository = PythonScriptRepository::new(&state.pool);
+    match repository.delete(&id).await {
+        Ok(_) => Ok(()),
+        Err(err) => return Err(String::new()),
+    }
 }

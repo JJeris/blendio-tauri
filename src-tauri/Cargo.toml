@@ -32,4 +32,5 @@ tauri-plugin-upload = "2"
 uuid = { version = "1.16.0", features = ["v4"] }
 tauri-plugin-dialog = "2"
 zip = "2.6.1"
+regex = "1.11.1"
 

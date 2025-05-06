@@ -4,13 +4,13 @@ import './TitleBar.css';
 
 const TitleBar = () => {
   return (
-    <div className="titlebar flex items-center justify-between p-2 bg-gray-800 text-white">
-      <span className="title font-bold text-lg">Blendio-Tauri</span>
-      <div className="space-x-4">
-        <Link to="/projectFiles" className="hover:underline">Project Files</Link>
-        <Link to="/installedBlenderVersions" className="hover:underline">Installed Blender Versions</Link>
-        <Link to="/blenderdownload" className="hover:underline">Blender Downloads</Link>
-        <Link to="/settings" className="hover:underline">Settings</Link>
+    <div className="titlebar flex items-center justify-between px-4 py-1 bg-gray-900 text-white">
+      <span className="title text-white font-semibold text-base">Blendio-Tauri</span>
+      <div className="flex space-x-4 text-sm">
+        <Link to="/projectFiles" className="navlink">Project Files</Link>
+        <Link to="/installedBlenderVersions" className="navlink">Installed Versions</Link>
+        <Link to="/blenderdownload" className="navlink">Downloads</Link>
+        <Link to="/settings" className="navlink">Settings</Link>
       </div>
     </div>
   );

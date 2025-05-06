@@ -1,0 +1,13 @@
+{
+    "$schema": "../gen/schemas/desktop-schema.json",
+    "identifier": "launch-blender-version-popup",
+    "description": "Capability for the open blender popup window",
+    "windows": [
+      "launch-blender-version-popup"
+    ],
+    "permissions": [
+      "core:default",
+      "core:window:default",
+      "core:window:allow-close"
+    ]
+  }

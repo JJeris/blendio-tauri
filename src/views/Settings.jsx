@@ -61,7 +61,6 @@ const Settings = () => {
     try {
       await invoke("update_blender_version_installation_location", {
         id: selectedId,
-        repoDirectoryPath: repoPaths.find((e) => e.id === selectedId).repo_directory_path,
         isDefault: repoPaths.find((e) => e.id === selectedId).is_default,
       });
       await loadPaths();
@@ -72,13 +71,9 @@ const Settings = () => {
 
   const handleSetDefaultLaunchArg = async (selectedId) => {
     try {
-      const selected = launchArgs.find((e) => e.id === selectedId);
       await invoke("update_launch_argument", {
         id: selectedId,
-        isDefault: selected.is_default,
-        argumentString: selected.argument_string,
-        lastUsedProjectFileId: selected.last_used_project_file_id,
-        lastUsedPythonScriptId: selected.last_used_python_script_id,
+        isDefault: launchArgs.find((e) => e.id === selectedId).is_default,
       });
       await loadLaunchArgs();
     } catch (error) {

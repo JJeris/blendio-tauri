@@ -28,7 +28,6 @@ export default function ProjectFiles() {
                 if (!projectFileId) {
                     console.error("Missing projectFileId — did you forget to set the ref?");
                     return;
-
                 }
 
                 let launchArgumentId = null;
@@ -62,7 +61,6 @@ export default function ProjectFiles() {
             );
         };
     }, []);
-
 
     const loadProjectFiles = async () => {
         try {
@@ -145,7 +143,7 @@ export default function ProjectFiles() {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">.blend Project Files</h1>
                 <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    className="mt-2 bg-green-500 text-white px-4 py-2 rounded"
                     onClick={handleCreateNewBlendFile}
                 >
                     Create New .blend File
