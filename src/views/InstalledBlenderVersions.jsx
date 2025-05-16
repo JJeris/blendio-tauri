@@ -33,8 +33,8 @@ export default function InstalledBlenderVersions() {
                     pythonScriptId: pythonScriptId || null,
                 });
                 await loadInstalledBlenderVersions();
-            } catch (e) {
-                console.error("Failed to launch Blender version from popup:", e);
+            } catch (err) {
+                console.error("Failed to launch Blender version from popup:", err);
             } finally {
                 pendingLaunchVersionRef.current = null;
             }
@@ -48,38 +48,40 @@ export default function InstalledBlenderVersions() {
     const loadInstalledBlenderVersions = async () => {
         try {
             await invoke("insert_and_refresh_installed_blender_versions");
-            const installed = await invoke("fetch_installed_blender_versions", {
+            const versions = await invoke("fetch_installed_blender_versions", {
                 id: null,
                 limit: null,
-                installedBlenderVersions: null
+                executableFilePath: null
             });
-            setInstalledBlenderVersions(installed);
-        } catch (e) {
-            console.error("Failed to load installed Blender versions:", e);
+            setInstalledBlenderVersions(versions);
+        } catch (err) {
+            setInstalledBlenderVersions([]);
+            console.error("Failed to load installed Blender versions:", err);
         }
     };
 
     const handleSetDefault = async (selectedId) => {
         try {
-            const selected = installedBlenderVersions.find((e) => e.id === selectedId);
             await invoke("update_installed_blender_version", {
                 id: selectedId,
-                isDefault: selected.is_default,
+                isDefault: installedBlenderVersions.find((e) => e.id === selectedId).is_default
             });
             await loadInstalledBlenderVersions();
-        } catch (e) {
-            console.error("Failed to set default Blender version:", e);
+        } catch (err) {
+            await loadInstalledBlenderVersions();
+            console.error("Failed to set default Blender version:", err);
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (selectedId) => {
         try {
             await invoke("uninstall_and_delete_installed_blender_version_data", {
-                id: id,
+                id: selectedId,
             });
             await loadInstalledBlenderVersions();
-        } catch (e) {
-            console.error("Failed to delete Blender version:", e);
+        } catch (err) {
+            await loadInstalledBlenderVersions();
+            console.error("Failed to delete Blender version:", err);
         }
     };
 
@@ -91,54 +93,54 @@ export default function InstalledBlenderVersions() {
                 title: "Launch Blender Version",
                 urlPath: "popup/LaunchBlenderPopup"
             });
-        } catch (e) {
-            console.error("Failed to open launch popup:", e);
+        } catch (err) {
+            await loadInstalledBlenderVersions();
+            console.error("Failed to open launch popup:", err);
         }
     };
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Installed Blender Versions</h1>
-            <table className="w-full border-collapse border text-sm">
+            <h1 className="mb-4">Installed Blender Versions</h1>
+            <table className="border-collapse">
                 <thead>
                     <tr>
-                        <th className="border p-2">Version</th>
-                        <th className="border p-2">Variant</th>
-                        <th className="border p-2">Install Path</th>
-                        <th className="border p-2">Executable</th>
-                        <th className="border p-2">Created</th>
-                        <th className="border p-2">Modified</th>
-                        <th className="border p-2">Accessed</th>
-                        <th className="border p-2">Default</th>
-                        <th className="border p-2">Actions</th>
+                        <th className="p-2">Version</th>
+                        <th className="p-2">Variant</th>
+                        <th className="p-2">Installation Path</th>
+                        <th className="p-2">Executable file path</th>
+                        <th className="p-2">Created</th>
+                        <th className="p-2">Modified</th>
+                        <th className="p-2">Accessed</th>
+                        <th className="p-2">Default</th>
+                        <th className="p-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {installedBlenderVersions.map((entry) => (
                         <tr key={entry.id}>
-                            <td className="border p-2">{entry.version}</td>
-                            <td className="border p-2">{entry.variant_type}</td>
-                            <td className="border p-2">{entry.installation_directory_path}</td>
-                            <td className="border p-2">{entry.executable_file_path}</td>
-                            <td className="border p-2">{entry.created}</td>
-                            <td className="border p-2">{entry.modified}</td>
-                            <td className="border p-2">{entry.accessed}</td>
-                            <td className="border p-2 text-center">
+                            <td className="p-2">{entry.version}</td>
+                            <td className="p-2">{entry.variant_type}</td>
+                            <td className="p-2">{entry.installation_directory_path}</td>
+                            <td className="p-2">{entry.executable_file_path}</td>
+                            <td className="p-2">{entry.created}</td>
+                            <td className="p-2">{entry.modified}</td>
+                            <td className="p-2">{entry.accessed}</td>
+                            <td className="p-2 ">
                                 <input
                                     type="checkbox"
                                     checked={entry.is_default}
                                     onChange={() => handleSetDefault(entry.id)}
                                 />
                             </td>
-                            <td className="border p-2 text-center space-x-2">
+                            <td className="p-2">
                                 <button
-                                    className="text-blue-600 hover:underline"
                                     onClick={() => handleLaunch(entry.id)}
                                 >
                                     Launch
                                 </button>
                                 <button
-                                    className="text-red-500 hover:underline"
+                                    className="text-red-500"
                                     onClick={() => handleDelete(entry.id)}
                                 >
                                     Delete
@@ -148,7 +150,7 @@ export default function InstalledBlenderVersions() {
                     ))}
                     {installedBlenderVersions.length === 0 && (
                         <tr>
-                            <td colSpan="9" className="text-center p-4">
+                            <td colSpan="9" className="p-4">
                                 No installed versions found.
                             </td>
                         </tr>

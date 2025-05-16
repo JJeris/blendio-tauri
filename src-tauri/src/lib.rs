@@ -1,6 +1,5 @@
 use tauri::Manager;
 
-mod db_context;
 mod db_repo;
 mod models;
 
@@ -98,7 +97,11 @@ pub async fn run() {
             fetch_launch_arguments,
             delete_launch_argument,
             //
-            instance_popup_window
+            instance_popup_window,
+            identify_internet_connection,
+            show_ok_notification,
+            show_ask_notification,
+
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

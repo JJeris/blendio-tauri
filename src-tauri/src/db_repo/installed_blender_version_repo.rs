@@ -12,7 +12,7 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
 
     pub async fn insert(&self, entry: &InstalledBlenderVersion) -> Result<(), sqlx::Error> {
         sqlx::query!(
-            "INSERT INTO installed_blender_versions (id, version, variant_type, download_url, is_default, installation_directory_path, executable_file_path) VALUES (?, ?, ?, ?, ?, ?, ?)  ON CONFLICT(executable_file_path) DO NOTHING",
+            "INSERT INTO installed_blender_versions (id, version, variant_type, download_url, is_default, installation_directory_path, executable_file_path) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(executable_file_path) DO NOTHING",
             entry.id,
             entry.version,
             entry.variant_type,
@@ -30,7 +30,7 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
-        executable_file_path: Option<&str>
+        executable_file_path: Option<&str>,
     ) -> Result<Vec<InstalledBlenderVersion>, sqlx::Error> {
         if let Some(id) = id {
             let item = sqlx::query_as::<_, InstalledBlenderVersion>(
@@ -48,10 +48,12 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
             .fetch_all(self.pool)
             .await
         } else if let Some(executable_file_path) = executable_file_path {
-            let item = sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions WHERE executable_file_path = ?")
-                .bind(executable_file_path)
-                .fetch_all(self.pool)
-                .await?;
+            let item = sqlx::query_as::<_, InstalledBlenderVersion>(
+                "SELECT * FROM installed_blender_versions WHERE executable_file_path = ?",
+            )
+            .bind(executable_file_path)
+            .fetch_all(self.pool)
+            .await?;
             Ok(item)
         } else {
             sqlx::query_as::<_, InstalledBlenderVersion>("SELECT * FROM installed_blender_versions")

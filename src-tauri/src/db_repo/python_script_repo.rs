@@ -10,11 +10,11 @@ impl<'a> PythonScriptRepository<'a> {
         Self { pool }
     }
 
-    pub async fn insert(&self, entry: &PythonScript) -> Result<(), sqlx::Error> {
+    pub async fn insert(&self, script: &PythonScript) -> Result<(), sqlx::Error> {
         sqlx::query!(
             "INSERT INTO python_scripts (id, script_file_path) VALUES (?, ?) ON CONFLICT(script_file_path) DO NOTHING",
-            entry.id,
-            entry.script_file_path
+            script.id,
+            script.script_file_path
         )
         .execute(self.pool)
         .await?;
@@ -25,7 +25,7 @@ impl<'a> PythonScriptRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
-        script_file_path: Option<String>
+        script_file_path: Option<&str>,
     ) -> Result<Vec<PythonScript>, sqlx::Error> {
         if let Some(id) = id {
             let item =
@@ -40,10 +40,12 @@ impl<'a> PythonScriptRepository<'a> {
                 .fetch_all(self.pool)
                 .await
         } else if let Some(script_file_path) = script_file_path {
-            let item = sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts WHERE script_file_path = ?")
-                .bind(script_file_path)
-                .fetch_all(self.pool)
-                .await?;
+            let item = sqlx::query_as::<_, PythonScript>(
+                "SELECT * FROM python_scripts WHERE script_file_path = ?",
+            )
+            .bind(script_file_path)
+            .fetch_all(self.pool)
+            .await?;
             Ok(item)
         } else {
             sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts")

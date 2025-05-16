@@ -28,7 +28,7 @@ impl<'a> LaunchArgumentRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
-        argument_string: Option<&str>
+        argument_string: Option<&str>,
     ) -> Result<Vec<LaunchArgument>, sqlx::Error> {
         if let Some(id) = id {
             let item =
@@ -43,10 +43,12 @@ impl<'a> LaunchArgumentRepository<'a> {
                 .fetch_all(self.pool)
                 .await
         } else if let Some(argument_string) = argument_string {
-            let item = sqlx::query_as::<_, LaunchArgument>("SELECT * FROM launch_arguments WHERE argument_string = ?")
-                .bind(argument_string)
-                .fetch_all(self.pool)
-                .await?;
+            let item = sqlx::query_as::<_, LaunchArgument>(
+                "SELECT * FROM launch_arguments WHERE argument_string = ?",
+            )
+            .bind(argument_string)
+            .fetch_all(self.pool)
+            .await?;
             Ok(item)
         } else {
             sqlx::query_as::<_, LaunchArgument>("SELECT * FROM launch_arguments")

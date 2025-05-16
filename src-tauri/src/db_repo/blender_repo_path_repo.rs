@@ -1,7 +1,6 @@
 use crate::models::BlenderRepoPath;
 use sqlx::SqlitePool;
 
-// TODO might need to update this? Like remove the pool since im using the one in lib.rs
 pub struct BlenderRepoPathRepository<'a> {
     pub pool: &'a SqlitePool,
 }
@@ -27,6 +26,7 @@ impl<'a> BlenderRepoPathRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
+        repo_directory_path: Option<&str>,
     ) -> Result<Vec<BlenderRepoPath>, sqlx::Error> {
         if let Some(id) = id {
             let item = sqlx::query_as::<_, BlenderRepoPath>(
@@ -41,6 +41,14 @@ impl<'a> BlenderRepoPathRepository<'a> {
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
+        } else if let Some(repo_directory_path) = repo_directory_path {
+            let item = sqlx::query_as::<_, BlenderRepoPath>(
+                "SELECT * FROM blender_repo_paths WHERE repo_directory_path = ?",
+            )
+            .bind(repo_directory_path)
+            .fetch_all(self.pool)
+            .await?;
+            Ok(item)
         } else {
             sqlx::query_as::<_, BlenderRepoPath>("SELECT * FROM blender_repo_paths")
                 .fetch_all(self.pool)

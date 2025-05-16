@@ -47,6 +47,14 @@ button.bg-green-500 {
   text-decoration: underline;
 }
 
+.text-green-500 {
+  color: #22c55e;
+}
+
+.text-green-500:hover {
+  text-decoration: underline;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

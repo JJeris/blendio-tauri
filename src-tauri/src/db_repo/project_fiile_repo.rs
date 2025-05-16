@@ -10,14 +10,14 @@ impl<'a> ProjectFileRepository<'a> {
         Self { pool }
     }
 
-    pub async fn insert(&self, entry: &ProjectFile) -> Result<(), sqlx::Error> {
+    pub async fn insert(&self, file: &ProjectFile) -> Result<(), sqlx::Error> {
         sqlx::query!(
             "INSERT INTO project_files (id, file_path, file_name, associated_series_json, last_used_blender_version_id) VALUES (?, ?, ?, ?, ?) ON CONFLICT(file_path) DO NOTHING",
-            entry.id,
-            entry.file_path,
-            entry.file_name,
-            entry.associated_series_json,
-            entry.last_used_blender_version_id
+            file.id,
+            file.file_path,
+            file.file_name,
+            file.associated_series_json,
+            file.last_used_blender_version_id
         )
         .execute(self.pool)
         .await?;
@@ -28,7 +28,7 @@ impl<'a> ProjectFileRepository<'a> {
         &self,
         id: Option<&str>,
         limit: Option<i64>,
-        file_path: Option<&str>
+        file_path: Option<&str>,
     ) -> Result<Vec<ProjectFile>, sqlx::Error> {
         if let Some(id) = id {
             let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE id = ?")
@@ -42,10 +42,11 @@ impl<'a> ProjectFileRepository<'a> {
                 .fetch_all(self.pool)
                 .await
         } else if let Some(file_path) = file_path {
-            let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE file_path = ?")
-                .bind(file_path)
-                .fetch_all(self.pool)
-                .await?;
+            let item =
+                sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE file_path = ?")
+                    .bind(file_path)
+                    .fetch_all(self.pool)
+                    .await?;
             Ok(item)
         } else {
             sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files")

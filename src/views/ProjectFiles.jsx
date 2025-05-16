@@ -18,8 +18,9 @@ export default function ProjectFiles() {
                         fileName,
                     });
                     await loadProjectFiles();
-                } catch (e) {
-                    console.error("Failed to create new project file from popup:", e);
+                } catch (err) {
+                    await loadProjectFiles();
+                    console.error("Failed to create new project file from popup:", err);
                 }
             }),
             listen("open-project-file-confirmed", async (event) => {
@@ -46,10 +47,10 @@ export default function ProjectFiles() {
                         pythonScriptId: pythonScriptId || null,
                         launchArgumentsId: launchArgumentId || null,
                     });
-                    loadProjectFiles();
-                } catch (error) {
-                    console.error("Failed to open project file from popup:", e);
+                } catch (err) {
+                    console.error("Failed to open project file from popup:", err);
                 } finally {
+                    await loadProjectFiles();
                     pendingOpenProjectRef.current = null;
                 }
             }),
@@ -65,14 +66,15 @@ export default function ProjectFiles() {
     const loadProjectFiles = async () => {
         try {
             await invoke("insert_and_refresh_blend_files");
-            const result = await invoke("fetch_blend_files", {
+            const files = await invoke("fetch_blend_files", {
                 id: null,
                 limit: null,
                 filePath: null,
             });
-            setProjectFiles(result);
-        } catch (e) {
-            console.error("Failed to load .blend project files:", e);
+            setProjectFiles(files);
+        } catch (err) {
+            setProjectFiles([]);
+            console.error("Failed to load .blend project files:", err);
         }
     };
 
@@ -84,8 +86,9 @@ export default function ProjectFiles() {
                 title: "Launch Project File",
                 urlPath: "popup/LaunchBlendPopup",
             });
-        } catch (e) {
-            console.error("Failed to open .blend file:", e);
+        } catch (err) {
+            await loadProjectFiles();
+            console.error("Failed to open .blend file:", err);
         }
     };
 
@@ -93,24 +96,27 @@ export default function ProjectFiles() {
         try {
             await invoke("delete_blend_file", { id });
             await loadProjectFiles();
-        } catch (e) {
-            console.error("Failed to delete .blend file:", e);
+        } catch (err) {
+            await loadProjectFiles();
+            console.error("Failed to delete .blend file:", err);
         }
     };
 
     const handleRevealInExplorer = async (id) => {
         try {
             await invoke("reveal_project_file_in_local_file_system", { id });
-        } catch (e) {
-            console.error("Failed to reveal .blend file:", e);
+        } catch (err) {
+            await loadProjectFiles();
+            console.error("Failed to reveal .blend file:", err);
         }
     };
 
     const handleInsertIntoArchive = async (id) => {
         try {
             await invoke("create_project_file_archive_file", { id });
-        } catch (e) {
-            console.error("Failed to insert .blend file into archive:", e);
+        } catch (err) {
+            await loadProjectFiles();
+            console.error("Failed to insert .blend file into archive:", err);
         }
     };
 
@@ -121,46 +127,34 @@ export default function ProjectFiles() {
                 title: "Create New Project File",
                 urlPath: "popup/CreateBlendPopup",
             });
-        } catch (e) {
-            console.error("Failed to open popup for creating new .blend file:", e);
+        } catch (err) {
+            await loadProjectFiles();
+            console.error("Failed to open popup for creating new .blend file:", err);
         }
     };
 
-    const handleInsertLaunchArgument = async (argumentString, projectFileId, pythonScriptId) => {
-        try {
-            await invoke("insert_launch_argument", {
-                argumentString,
-                projectFileId,
-                pythonScriptId
-            });
-        } catch (e) {
-            console.error("Failed to insert launch argument into the db", e);
-        }
-    }
-
     return (
         <div className="p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">.blend Project Files</h1>
+            <div className="mb-4">
+                <h1 >Project Files</h1>
                 <button
-                    className="mt-2 bg-green-500 text-white px-4 py-2 rounded"
+                    className="mt-2 bg-green-500"
                     onClick={handleCreateNewBlendFile}
                 >
                     Create New .blend File
                 </button>
             </div>
 
-            <table className="w-full border-collapse border text-sm">
+            <table className="border-collapse">
                 <thead>
                     <tr>
-                        <th className="border p-2">File Name</th>
-                        <th className="border p-2">File Path</th>
-                        <th className="border p-2">Series</th>
-                        <th className="border p-2">Last Blender Version</th>
-                        <th className="border p-2">Created</th>
-                        <th className="border p-2">Modified</th>
-                        <th className="border p-2">Accessed</th>
-                        <th className="border p-2">Actions</th>
+                        <th className="p-2">File Name</th>
+                        <th className="p-2">File Path</th>
+                        <th className="p-2">Associated Blender Series</th>
+                        <th className="p-2">Created</th>
+                        <th className="p-2">Modified</th>
+                        <th className="p-2">Accessed</th>
+                        <th className="p-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -175,38 +169,32 @@ export default function ProjectFiles() {
 
                         return (
                             <tr key={entry.id}>
-                                <td className="border p-2">{entry.file_name}</td>
-                                <td className="border p-2">{entry.file_path}</td>
-                                <td className="border p-2">
+                                <td className="p-2">{entry.file_name}</td>
+                                <td className="p-2">{entry.file_path}</td>
+                                <td className="p-2">
                                     {seriesList.length > 0 ? seriesList.join(", ") : "—"}
                                 </td>
-                                <td className="border p-2">
-                                    {entry.last_used_blender_version_id ?? "N/A"}
-                                </td>
-                                <td className="border p-2">{entry.created}</td>
-                                <td className="border p-2">{entry.modified}</td>
-                                <td className="border p-2">{entry.accessed}</td>
-                                <td className="border p-2 space-x-2 text-center">
+                                <td className="p-2">{entry.created}</td>
+                                <td className="p-2">{entry.modified}</td>
+                                <td className="p-2">{entry.accessed}</td>
+                                <td className="p-2">
                                     <button
-                                        className="text-blue-600 hover:underline"
                                         onClick={() => handleOpen(entry.id)}
                                     >
                                         Open
                                     </button>
                                     <button
-                                        className="text-red-500 hover:underline"
+                                        className="text-red-500"
                                         onClick={() => handleDelete(entry.id)}
                                     >
                                         Delete
                                     </button>
                                     <button
-                                        className="text-gray-600 hover:underline"
                                         onClick={() => handleRevealInExplorer(entry.id)}
                                     >
                                         Reveal
                                     </button>
                                     <button
-                                        className="text-purple-600 hover:underline"
                                         onClick={() => handleInsertIntoArchive(entry.id)}
                                     >
                                         Archive
@@ -217,7 +205,7 @@ export default function ProjectFiles() {
                     })}
                     {projectFiles.length === 0 && (
                         <tr>
-                            <td colSpan="8" className="text-center p-4">
+                            <td colSpan="8" className="p-4">
                                 No project files found.
                             </td>
                         </tr>
