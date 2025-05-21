@@ -30,18 +30,18 @@ impl<'a> ProjectFileRepository<'a> {
         limit: Option<i64>,
         file_path: Option<&str>,
     ) -> Result<Vec<ProjectFile>, sqlx::Error> {
-        if let Some(id) = id {
+        if let Some(id) = id { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE id = ?")
                 .bind(id)
                 .fetch_all(self.pool)
                 .await?;
             Ok(item)
-        } else if let Some(limit) = limit {
+        } else if let Some(limit) = limit { // A (1.d.) if let Some()
             sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files LIMIT ?")
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
-        } else if let Some(file_path) = file_path {
+        } else if let Some(file_path) = file_path { // A (1.d.) if let Some()
             let item =
                 sqlx::query_as::<_, ProjectFile>("SELECT * FROM project_files WHERE file_path = ?")
                     .bind(file_path)

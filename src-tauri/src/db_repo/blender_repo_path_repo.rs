@@ -28,7 +28,7 @@ impl<'a> BlenderRepoPathRepository<'a> {
         limit: Option<i64>,
         repo_directory_path: Option<&str>,
     ) -> Result<Vec<BlenderRepoPath>, sqlx::Error> {
-        if let Some(id) = id {
+        if let Some(id) = id { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, BlenderRepoPath>(
                 "SELECT * FROM blender_repo_paths WHERE id = ?",
             )
@@ -36,12 +36,12 @@ impl<'a> BlenderRepoPathRepository<'a> {
             .fetch_all(self.pool)
             .await?;
             Ok(item)
-        } else if let Some(limit) = limit {
+        } else if let Some(limit) = limit { // A (1.d.) if let Some()
             sqlx::query_as::<_, BlenderRepoPath>("SELECT * FROM blender_repo_paths LIMIT ?")
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
-        } else if let Some(repo_directory_path) = repo_directory_path {
+        } else if let Some(repo_directory_path) = repo_directory_path { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, BlenderRepoPath>(
                 "SELECT * FROM blender_repo_paths WHERE repo_directory_path = ?",
             )

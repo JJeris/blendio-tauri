@@ -98,9 +98,7 @@ pub async fn run() {
             delete_launch_argument,
             //
             instance_popup_window,
-            identify_internet_connection,
-            show_ok_notification,
-            show_ask_notification,
+            identify_internet_connection
 
         ])
         .run(tauri::generate_context!())

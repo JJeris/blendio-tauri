@@ -30,19 +30,19 @@ impl<'a> LaunchArgumentRepository<'a> {
         limit: Option<i64>,
         argument_string: Option<&str>,
     ) -> Result<Vec<LaunchArgument>, sqlx::Error> {
-        if let Some(id) = id {
+        if let Some(id) = id { // A (1.d.) if let Some()
             let item =
                 sqlx::query_as::<_, LaunchArgument>("SELECT * FROM launch_arguments WHERE id = ?")
                     .bind(id)
                     .fetch_all(self.pool)
                     .await?;
             Ok(item)
-        } else if let Some(limit) = limit {
+        } else if let Some(limit) = limit { // A (1.d.) if let Some()
             sqlx::query_as::<_, LaunchArgument>("SELECT * FROM launch_arguments LIMIT ?")
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
-        } else if let Some(argument_string) = argument_string {
+        } else if let Some(argument_string) = argument_string { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, LaunchArgument>(
                 "SELECT * FROM launch_arguments WHERE argument_string = ?",
             )

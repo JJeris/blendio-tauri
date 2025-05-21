@@ -32,7 +32,7 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
         limit: Option<i64>,
         executable_file_path: Option<&str>,
     ) -> Result<Vec<InstalledBlenderVersion>, sqlx::Error> {
-        if let Some(id) = id {
+        if let Some(id) = id { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, InstalledBlenderVersion>(
                 "SELECT * FROM installed_blender_versions WHERE id = ?",
             )
@@ -40,14 +40,14 @@ impl<'a> InstalledBlenderVersionRepository<'a> {
             .fetch_all(self.pool)
             .await?;
             Ok(item)
-        } else if let Some(limit) = limit {
+        } else if let Some(limit) = limit { // A (1.d.) if let Some()
             sqlx::query_as::<_, InstalledBlenderVersion>(
                 "SELECT * FROM installed_blender_versions LIMIT ?",
             )
             .bind(limit)
             .fetch_all(self.pool)
             .await
-        } else if let Some(executable_file_path) = executable_file_path {
+        } else if let Some(executable_file_path) = executable_file_path { // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, InstalledBlenderVersion>(
                 "SELECT * FROM installed_blender_versions WHERE executable_file_path = ?",
             )
