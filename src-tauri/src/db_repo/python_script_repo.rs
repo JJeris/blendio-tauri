@@ -27,19 +27,22 @@ impl<'a> PythonScriptRepository<'a> {
         limit: Option<i64>,
         script_file_path: Option<&str>,
     ) -> Result<Vec<PythonScript>, sqlx::Error> {
-        if let Some(id) = id { // A (1.d.) if let Some()
+        if let Some(id) = id {
+            // A (1.d.) if let Some()
             let item =
                 sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts WHERE id = ?")
                     .bind(id)
                     .fetch_all(self.pool)
                     .await?;
             Ok(item)
-        } else if let Some(limit) = limit { // A (1.d.) if let Some()
+        } else if let Some(limit) = limit {
+            // A (1.d.) if let Some()
             sqlx::query_as::<_, PythonScript>("SELECT * FROM python_scripts LIMIT ?")
                 .bind(limit)
                 .fetch_all(self.pool)
                 .await
-        } else if let Some(script_file_path) = script_file_path { // A (1.d.) if let Some()
+        } else if let Some(script_file_path) = script_file_path {
+            // A (1.d.) if let Some()
             let item = sqlx::query_as::<_, PythonScript>(
                 "SELECT * FROM python_scripts WHERE script_file_path = ?",
             )

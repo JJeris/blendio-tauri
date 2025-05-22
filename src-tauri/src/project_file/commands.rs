@@ -4,7 +4,7 @@ use crate::{
         PythonScriptRepository,
     },
     file_system_utility::{self, show_ok_notification},
-    models::{ProjectFile},
+    models::ProjectFile,
     AppState,
 };
 use tauri::AppHandle;
@@ -18,10 +18,13 @@ pub async fn insert_blend_file(
     state: tauri::State<'_, AppState>,
     file_path: std::path::PathBuf,
 ) -> Result<(), String> {
-    let file_name = match file_path.file_name() { // A (1.a.) let file_name =; C (3.b.) match; B (2.a.) .file_name()
+    let file_name = match file_path.file_name() {
+        // A (1.a.) let file_name =; C (3.b.) match; B (2.a.) .file_name()
         Some(val) => val.to_string_lossy().to_string(), // C (3.c) Some(); B (2.a.) .to_string_loosy(); B (2.a.) .to_string();
-        None => { // C (3.c) None =>; 
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        None => {
+            // C (3.c) None =>;
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to insert project file: can't identify file name"),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -31,7 +34,8 @@ pub async fn insert_blend_file(
             )); // B (2.b.) priekšlaicīgs return
         }
     };
-    let entry = ProjectFile { // A (1.a.) let entry =;
+    let entry = ProjectFile {
+        // A (1.a.) let entry =;
         id: uuid::Uuid::new_v4().to_string(), // B (2.a.) uuid::Uuid::new_v4(); B (2.a.) .to_string();
         file_path: file_path.to_string_lossy().to_string(), // B (2.a.) .to_string_loosy(); B (2.a.) .to_string();
         file_name: file_name,
@@ -42,10 +46,13 @@ pub async fn insert_blend_file(
         accessed: chrono::Utc::now().to_rfc3339(), // B (2.a.) chrono::Utc::now(); B (2.a.) .to_rfc3339();
     };
     let repository = ProjectFileRepository::new(&state.pool); // A (1.a.) let repository =; B (2.a.) ...::new()
-    match repository.insert(&entry).await { // C (3.b) match; B (2.a.) repository.insert()
+    match repository.insert(&entry).await {
+        // C (3.b) match; B (2.a.) repository.insert()
         Ok(_) => Ok(()), // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to insert project file: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -64,10 +71,13 @@ pub async fn insert_and_refresh_blend_files(
     state: tauri::State<'_, AppState>,
 ) -> Result<(), String> {
     let repository = ProjectFileRepository::new(&state.pool); // A (1.a.) let repository =; B (2.a.) ...::new()
-    let config_directory = match dirs::config_dir() { // A (1.a.) let config_directory =; C (3.b) match
+    let config_directory = match dirs::config_dir() {
+        // A (1.a.) let config_directory =; C (3.b) match
         Some(val) => val, // C (3.c) Some()
-        None => { // C (3.c) None =>; 
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        None => {
+            // C (3.c) None =>;
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to insert and refresh project files: no config directory found"),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -78,11 +88,14 @@ pub async fn insert_and_refresh_blend_files(
         }
     };
     let blender_foundation_directory = config_directory.join("Blender Foundation").join("Blender"); // A (1.a.) let blender_foundation_directory =; B (2.a.) .join("Blender Foundation"); B (2.a.) .join("Blender")
-    // Read in the recent-files.txt.
-    let directory_entries = match std::fs::read_dir(blender_foundation_directory) { // A (1.a.) let directory_entries =; C (3.b) match; B (2.a.) ::read_dir()
+                                                                                                    // Read in the recent-files.txt.
+    let directory_entries = match std::fs::read_dir(blender_foundation_directory) {
+        // A (1.a.) let directory_entries =; C (3.b) match; B (2.a.) ::read_dir()
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to insert and refresh project files: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -93,11 +106,15 @@ pub async fn insert_and_refresh_blend_files(
             )); // B (2.b.) priekšlaicīgs return
         }
     };
-    for entry in directory_entries { // A (1.a.) let entry =;
-        let entry_dir_entry = match entry { // A (1.a.) let entry_dir_entry =; C (3.b) match
+    for entry in directory_entries {
+        // A (1.a.) let entry =;
+        let entry_dir_entry = match entry {
+            // A (1.a.) let entry_dir_entry =; C (3.b) match
             Ok(val) => val, // C (3.c.) Ok()
-            Err(err) => { // C (3.c) Err();
-                show_ok_notification( // B (2.a.) show_ok_notification()
+            Err(err) => {
+                // C (3.c) Err();
+                show_ok_notification(
+                    // B (2.a.) show_ok_notification()
                     app.clone(), // B (2.a.) app.clone();
                     format!("Failed to insert and refresh project files: {:?}", err),
                     tauri_plugin_dialog::MessageDialogKind::Error,
@@ -113,14 +130,18 @@ pub async fn insert_and_refresh_blend_files(
             .path() // B (2.a.) .path()
             .join("config") // B (2.a.) .join()
             .join("recent-files.txt"); // B (2.a.) .join()
-        if !recent_files_txt_path.exists() { // B (2.a.) .exists(); C (3.a) recent_files_txt_path.exists() != true
+        if !recent_files_txt_path.exists() {
+            // B (2.a.) .exists(); C (3.a) recent_files_txt_path.exists() != true
             continue; // B (2.b.) continue
         }
         // Read in the file.
-        let recent_files_txt_content = match std::fs::read_to_string(&recent_files_txt_path) { // A (1.a.) let recent_files_txt_content =; C (3.b) match; B (2.a.) ::read_to_string()
+        let recent_files_txt_content = match std::fs::read_to_string(&recent_files_txt_path) {
+            // A (1.a.) let recent_files_txt_content =; C (3.b) match; B (2.a.) ::read_to_string()
             Ok(val) => val, // C (3.c.) Ok()
-            Err(err) => { // C (3.c) Err();
-                show_ok_notification( // B (2.a.) show_ok_notification()
+            Err(err) => {
+                // C (3.c) Err();
+                show_ok_notification(
+                    // B (2.a.) show_ok_notification()
                     app.clone(), // B (2.a.) app.clone();
                     format!("Failed to insert and refresh project files: {:?}", err),
                     tauri_plugin_dialog::MessageDialogKind::Error,
@@ -133,17 +154,21 @@ pub async fn insert_and_refresh_blend_files(
         };
         // Holds only the blend file paths that are confirmed to exist.
         let mut refreshed_recent_files_txt_content = String::new(); // A (1.a.) let mut refreshed_recent_files_txt_content =; B (2.a.) ...::new()
-        for line in recent_files_txt_content.lines() { // A (1.a.) let line =; B (2.a.) .lines()
+        for line in recent_files_txt_content.lines() {
+            // A (1.a.) let line =; B (2.a.) .lines()
             let raw_line = line.trim(); // A (1.a.) let raw_line =; B (2.a.) .trim()
             let file_path = std::path::PathBuf::from(raw_line); // A (1.a.) let file_path =; B (2.a.) ::from()
-            if !file_path.exists() { // B (2.a.) .exists(); C (3.a) file_path.exists() != true
+            if !file_path.exists() {
+                // B (2.a.) .exists(); C (3.a) file_path.exists() != true
                 let mut current_entries = match repository // A (1.a.) let mut current_entries =; C (3.b) match
-                    .fetch(None, None, Some(&file_path.to_string_lossy().to_string())) // B (2.a.) repository.fetch(); B (2.a.) .to_string_loosy(); B (2.a.) .to_string(); 
+                    .fetch(None, None, Some(&file_path.to_string_lossy().to_string())) // B (2.a.) repository.fetch(); B (2.a.) .to_string_loosy(); B (2.a.) .to_string();
                     .await
                 {
                     Ok(val) => val, // C (3.c.) Ok()
-                    Err(err) => { // C (3.c) Err();
-                        show_ok_notification( // B (2.a.) show_ok_notification()
+                    Err(err) => {
+                        // C (3.c) Err();
+                        show_ok_notification(
+                            // B (2.a.) show_ok_notification()
                             app.clone(), // B (2.a.) app.clone();
                             format!("Failed to insert and refresh project files: {:?}", err),
                             tauri_plugin_dialog::MessageDialogKind::Error,
@@ -154,12 +179,16 @@ pub async fn insert_and_refresh_blend_files(
                         )); // B (2.b.) priekšlaicīgs return
                     }
                 };
-                if !current_entries.is_empty() { // B (2.a.) .is_empty(); C (3.a) current_entries.is_empty() != true
+                if !current_entries.is_empty() {
+                    // B (2.a.) .is_empty(); C (3.a) current_entries.is_empty() != true
                     let entry_to_remove = current_entries.remove(0); // A (1.a.) let entry_to_remove =; B (2.a.) .remove()
-                    match repository.delete(&entry_to_remove.id).await { // C (3.b) match; B (2.a.) repository.delete()
+                    match repository.delete(&entry_to_remove.id).await {
+                        // C (3.b) match; B (2.a.) repository.delete()
                         Ok(_) => {} // C (3.c.) Ok()
-                        Err(err) => { // C (3.c) Err();
-                            show_ok_notification( // B (2.a.) show_ok_notification()
+                        Err(err) => {
+                            // C (3.c) Err();
+                            show_ok_notification(
+                                // B (2.a.) show_ok_notification()
                                 app.clone(), // B (2.a.) app.clone();
                                 format!("Failed to delete project file: {:?}", err),
                                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -170,7 +199,8 @@ pub async fn insert_and_refresh_blend_files(
                     }
                 }
                 continue; // B (2.b.) continue
-            } else { // C (3.b.) else
+            } else {
+                // C (3.b.) else
                 // Update.
                 refreshed_recent_files_txt_content.push_str(&file_path.to_string_lossy()); // A (1.c.) .push_str(); B (2.a.) .to_string_lossy()
                 refreshed_recent_files_txt_content.push('\n'); // A (1.c.) .push();
@@ -180,8 +210,10 @@ pub async fn insert_and_refresh_blend_files(
                 .await
             {
                 Ok(val) => val, // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to fetch project files: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -190,18 +222,22 @@ pub async fn insert_and_refresh_blend_files(
                     // B (2.b.) priekšlaicīgs return
                 }
             };
-            if existing_entries.is_empty() { // B (2.a.) .is_empty(); C (3.a) existing_entries.is_empty() == true
-                let file_name = match file_path.file_name() { // A (1.a.) let file_name =; C (3.b) match; B (2.a.) .file_name(); 
+            if existing_entries.is_empty() {
+                // B (2.a.) .is_empty(); C (3.a) existing_entries.is_empty() == true
+                let file_name = match file_path.file_name() {
+                    // A (1.a.) let file_name =; C (3.b) match; B (2.a.) .file_name();
                     Some(val) => val.to_string_lossy().to_string(), // C (3.c) Some(); B (2.a.) .to_string_loosy(); B (2.a.) .to_string();
-                    None => { // C (3.c) None =>; 
-                        show_ok_notification(app.clone(), format!("Failed to insert and refresh project file: can't identify file name"), tauri_plugin_dialog::MessageDialogKind::Error);  // B (2.a.) show_ok_notification(); B (2.a.) app.clone();
+                    None => {
+                        // C (3.c) None =>;
+                        show_ok_notification(app.clone(), format!("Failed to insert and refresh project file: can't identify file name"), tauri_plugin_dialog::MessageDialogKind::Error); // B (2.a.) show_ok_notification(); B (2.a.) app.clone();
                         return Err(format!(
                             "Failed to insert and refresh project file: can't identify file name"
                         )); // B (2.b.) priekšlaicīgs return
                     }
                 };
                 // If an entry does not exist, insert it.
-                let new_project_file_entry = ProjectFile { // A (1.a.) let new_project_file_entry =
+                let new_project_file_entry = ProjectFile {
+                    // A (1.a.) let new_project_file_entry =
                     id: uuid::Uuid::new_v4().to_string(), // B (2.a.) uuid::Uuid::new_v4(); B (2.a.) .to_string();
                     file_path: file_path.to_string_lossy().to_string(), // B (2.a.) .to_string_loosy(); B (2.a.) .to_string();
                     file_name: file_name,
@@ -212,10 +248,13 @@ pub async fn insert_and_refresh_blend_files(
                     modified: chrono::Utc::now().to_rfc3339(), // B (2.a.) chrono::Utc::now(); B (2.a.) .to_rfc3339();
                     accessed: chrono::Utc::now().to_rfc3339(), // B (2.a.) chrono::Utc::now(); B (2.a.) .to_rfc3339();
                 };
-                match repository.insert(&new_project_file_entry).await { // C (3.b) match; B (2.a.) repository.insert()
+                match repository.insert(&new_project_file_entry).await {
+                    // C (3.b) match; B (2.a.) repository.insert()
                     Ok(_) => {} // C (3.c.) Ok()
-                    Err(err) => { // C (3.c) Err();
-                        show_ok_notification( // B (2.a.) show_ok_notification()
+                    Err(err) => {
+                        // C (3.c) Err();
+                        show_ok_notification(
+                            // B (2.a.) show_ok_notification()
                             app.clone(), // B (2.a.) app.clone();
                             format!("Failed to insert project file: {:?}", err),
                             tauri_plugin_dialog::MessageDialogKind::Error,
@@ -224,7 +263,8 @@ pub async fn insert_and_refresh_blend_files(
                         // B (2.b.) priekšlaicīgs return
                     }
                 }
-            } else { // C (3.b.) else
+            } else {
+                // C (3.b.) else
                 let mut existing_entry = existing_entries.remove(0); // A (1.a.) let mut existing_entry =; B (2.a.) .remove()
                 let mut associated_series_json: Vec<String> = // A (1.a.) let mut associated_series_json =;
                     match serde_json::from_str(&existing_entry.associated_series_json) { // C (3.b) match; B (2.a.) ::from_str()
@@ -241,15 +281,19 @@ pub async fn insert_and_refresh_blend_files(
                             )); // B (2.b.) priekšlaicīgs return
                         }
                     };
-                if !associated_series_json.contains(&series_name) { // B (2.a.) .contains(); C (3.a) associated_series_json.contains() != true
+                if !associated_series_json.contains(&series_name) {
+                    // B (2.a.) .contains(); C (3.a) associated_series_json.contains() != true
                     associated_series_json.push(series_name.clone()); // A (1.c.) .push(); B (2.a.) series_name.clone();
                     associated_series_json.sort(); // A (1.c.) .sort();
                     existing_entry.associated_series_json = // A (1.a.) existing_entry.associated_series_json =;
                         serde_json::to_string(&associated_series_json).unwrap(); // B (2.a.) ::to_string(); B (2.a.) .unwrap()
-                    match repository.update(&existing_entry).await { // C (3.b) match; B (2.a.) repository.update()
+                    match repository.update(&existing_entry).await {
+                        // C (3.b) match; B (2.a.) repository.update()
                         Ok(_) => {} // C (3.c.) Ok()
-                        Err(err) => { // C (3.c) Err();
-                            show_ok_notification( // B (2.a.) show_ok_notification()
+                        Err(err) => {
+                            // C (3.c) Err();
+                            show_ok_notification(
+                                // B (2.a.) show_ok_notification()
                                 app.clone(), // B (2.a.) app.clone();
                                 format!("Failed to insert and refresh project files: {:?}", err),
                                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -264,10 +308,13 @@ pub async fn insert_and_refresh_blend_files(
             }
         }
         // Write refreshed_recent_files_txt_content to recent-files.txt.
-        match std::fs::write(recent_files_txt_path, refreshed_recent_files_txt_content) { // C (3.b) match; B (2.a.) ::write()
+        match std::fs::write(recent_files_txt_path, refreshed_recent_files_txt_content) {
+            // C (3.b) match; B (2.a.) ::write()
             Ok(_) => {} // C (3.c.) Ok()
-            Err(err) => { // C (3.c) Err();
-                show_ok_notification( // B (2.a.) show_ok_notification()
+            Err(err) => {
+                // C (3.c) Err();
+                show_ok_notification(
+                    // B (2.a.) show_ok_notification()
                     app.clone(), // B (2.a.) app.clone();
                     format!("Failed to insert and refresh project files: {:?}", err),
                     tauri_plugin_dialog::MessageDialogKind::Error,
@@ -279,10 +326,13 @@ pub async fn insert_and_refresh_blend_files(
             }
         }
     }
-    let current_entries = match repository.fetch(None, None, None).await { // A (1.a.) let current_entries =; C (3.b) match; B (2.a.) repository.fetch()
+    let current_entries = match repository.fetch(None, None, None).await {
+        // A (1.a.) let current_entries =; C (3.b) match; B (2.a.) repository.fetch()
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch project files: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -290,13 +340,18 @@ pub async fn insert_and_refresh_blend_files(
             return Err(format!("Failed to fetch project files: {:?}", err)); // B (2.b.) priekšlaicīgs return
         }
     };
-    for entry in current_entries { // A (1.a.) let entry =;
+    for entry in current_entries {
+        // A (1.a.) let entry =;
         let path = std::path::Path::new(&entry.file_path); // A (1.a.) let path =; B (2.a.) ...::new()
-        if !path.exists() { // B (2.a.) .exists(); C (3.a) path.exists() != true
-            match repository.delete(&entry.id).await { // C (3.b) match; B (2.a.) repository.delete()
+        if !path.exists() {
+            // B (2.a.) .exists(); C (3.a) path.exists() != true
+            match repository.delete(&entry.id).await {
+                // C (3.b) match; B (2.a.) repository.delete()
                 Ok(_) => {} // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to delete project file entry: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -327,8 +382,10 @@ pub async fn fetch_blend_files(
         .await
     {
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch project files: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -452,8 +509,10 @@ pub async fn open_blend_file(
                 // B (2.b.) priekšlaicīgs return
             }
         };
-    if project_file_entry_list.is_empty() { // C (3.a) project_file_entry_list.is_empty() == true; B (2.a.) .is_empty()
-        show_ok_notification( // B (2.a.) show_ok_notification()
+    if project_file_entry_list.is_empty() {
+        // C (3.a) project_file_entry_list.is_empty() == true; B (2.a.) .is_empty()
+        show_ok_notification(
+            // B (2.a.) show_ok_notification()
             app.clone(), // B (2.a.) app.clone();
             format!("Failed to fetch project file by ID"),
             tauri_plugin_dialog::MessageDialogKind::Error,
@@ -462,10 +521,13 @@ pub async fn open_blend_file(
     }
     let mut project_file_entry = project_file_entry_list.remove(0); // A (1.a.) let mut project_file_entry =; B (2.a.) project_file_entry_list.remove()
     project_file_entry.last_used_blender_version_id = Some(installed_blender_version_id.clone()); // A (1.a.) project_file_entry.last_used_blender_version_id =; B (2.a.) installed_blender_version_id.clone();
-    match project_file_repository.update(&project_file_entry).await { // C (3.b) match; B (2.a.) project_file_repository.update()
+    match project_file_repository.update(&project_file_entry).await {
+        // C (3.b) match; B (2.a.) project_file_repository.update()
         Ok(_) => {} // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to update project file: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -478,8 +540,10 @@ pub async fn open_blend_file(
         .await
     {
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch installed Blender versions: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -490,8 +554,10 @@ pub async fn open_blend_file(
             )); // B (2.b.) priekšlaicīgs return
         }
     };
-    if installed_blender_version_list.is_empty() { // C (3.a.) installed_blender_version_list.is_empty() == true; B (2.a.) .is_empty()
-        show_ok_notification(  // B (2.a.) show_ok_notification()
+    if installed_blender_version_list.is_empty() {
+        // C (3.a.) installed_blender_version_list.is_empty() == true; B (2.a.) .is_empty()
+        show_ok_notification(
+            // B (2.a.) show_ok_notification()
             app.clone(), // B (2.a.) app.clone();
             format!("Failed to fetch installed Blender version by ID"),
             tauri_plugin_dialog::MessageDialogKind::Error,
@@ -500,12 +566,14 @@ pub async fn open_blend_file(
     }
     let installed_blender_version_entry = installed_blender_version_list.remove(0); // A (1.a.) let installed_blender_version_entry =; B (2.a.) installed_blender_version_list.remove()
     match installed_blender_version_repository // C (3.b.) match
-        .update(&installed_blender_version_entry) // B (2.a.) installed_blender_version_repository.update() 
+        .update(&installed_blender_version_entry) // B (2.a.) installed_blender_version_repository.update()
         .await
     {
         Ok(_) => {} // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to update installed Blender version: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -515,15 +583,19 @@ pub async fn open_blend_file(
     }
     let mut final_launch_args: Vec<String> = vec![]; // A (1.a.) let mut final_launch_args =
     final_launch_args.push(project_file_entry.file_path.clone()); // A (1.c.) final_launch_args.push(); B (2.a.) project_file_entry.file_path.clone();
-    match launch_arguments_id { // C (3.b) match
-        Some(arg_id) => { // C (3.c) Some()
+    match launch_arguments_id {
+        // C (3.b) match
+        Some(arg_id) => {
+            // C (3.c) Some()
             let mut launch_argument_entry_list = match launch_argument_repository // A (1.a.) let mut launch_argument_entry_list =; C (3.b) match
                 .fetch(Some(&arg_id), None, None) // B (2.a.) launch_argument_repository.fetch()
                 .await
             {
                 Ok(val) => val, // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to fetch launch arguments: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -532,8 +604,10 @@ pub async fn open_blend_file(
                     // B (2.b.) priekšlaicīgs return
                 }
             };
-            if launch_argument_entry_list.is_empty() { // C (3.a.) launch_argument_entry_list.is_empty() == true; B (2.a.) .is_empty()
-                show_ok_notification( // B (2.a.) show_ok_notification()
+            if launch_argument_entry_list.is_empty() {
+                // C (3.a.) launch_argument_entry_list.is_empty() == true; B (2.a.) .is_empty()
+                show_ok_notification(
+                    // B (2.a.) show_ok_notification()
                     app.clone(), // B (2.a.) app.clone();
                     format!("Failed to fetch launch argument by ID"),
                     tauri_plugin_dialog::MessageDialogKind::Error,
@@ -541,10 +615,13 @@ pub async fn open_blend_file(
                 return Err(format!("Failed to fetch launch argument by ID")); // B (2.b.) priekšlaicīgs return
             }
             let entry = launch_argument_entry_list.remove(0); // A (1.a.) let entry =; B (2.a.) launch_argument_entry_list.remove()
-            match launch_argument_repository.update(&entry).await { // C (3.b) match; B (2.a.) launch_argument_repository.update()
+            match launch_argument_repository.update(&entry).await {
+                // C (3.b) match; B (2.a.) launch_argument_repository.update()
                 Ok(_) => {} // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to update launch argument: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -560,17 +637,21 @@ pub async fn open_blend_file(
                 .collect(); // B (2.a.) .collect()
             final_launch_args.extend(parsed_args); // B (2.a.) .extend()
         }
-        None => {} // C (3.c) None =>; 
+        None => {} // C (3.c) None =>;
     }
-    match python_script_id { // C (3.b) match
-        Some(script_id) => { // C (3.c) Some()
+    match python_script_id {
+        // C (3.b) match
+        Some(script_id) => {
+            // C (3.c) Some()
             let mut python_script_entry_list = match python_script_repository // A (1.a.) let mut python_script_entry_list =; C (3.b) match
                 .fetch(Some(&script_id), None, None) // B (2.a.) python_script_repository.fetch()
                 .await
             {
                 Ok(val) => val, // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to fetch python scripts: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -579,8 +660,10 @@ pub async fn open_blend_file(
                     // B (2.b.) priekšlaicīgs return
                 }
             };
-            if python_script_entry_list.is_empty() { // C (3.a) python_script_entry_list.is_empty() == true; B (2.a.) .is_empty()
-                show_ok_notification( // B (2.a.) show_ok_notification()
+            if python_script_entry_list.is_empty() {
+                // C (3.a) python_script_entry_list.is_empty() == true; B (2.a.) .is_empty()
+                show_ok_notification(
+                    // B (2.a.) show_ok_notification()
                     app.clone(), // B (2.a.) app.clone();
                     format!("Failed to fetch python script by ID"),
                     tauri_plugin_dialog::MessageDialogKind::Error,
@@ -588,10 +671,13 @@ pub async fn open_blend_file(
                 return Err(format!("Failed to fetch python script by ID")); // B (2.b.) priekšlaicīgs return
             }
             let entry = python_script_entry_list.remove(0); // A (1.a.) let entry =; B (2.a.) python_script_entry_list.remove()
-            match python_script_repository.update(&entry).await { // C (3.b) match; B (2.a.) python_script_repository.update()
+            match python_script_repository.update(&entry).await {
+                // C (3.b) match; B (2.a.) python_script_repository.update()
                 Ok(_) => {} // C (3.c.) Ok()
-                Err(err) => { // C (3.c) Err();
-                    show_ok_notification( // B (2.a.) show_ok_notification()
+                Err(err) => {
+                    // C (3.c) Err();
+                    show_ok_notification(
+                        // B (2.a.) show_ok_notification()
                         app.clone(), // B (2.a.) app.clone();
                         format!("Failed to update python script: {:?}", err),
                         tauri_plugin_dialog::MessageDialogKind::Error,
@@ -600,22 +686,27 @@ pub async fn open_blend_file(
                     // B (2.b.) priekšlaicīgs return
                 }
             }
-            if !final_launch_args.contains(&"--python".to_string()) { // C (3.a.) final_launch_args.contains(&"--python".to_string()) != true; B (2.a.) .contains(); B (2.a.) to_string()
+            if !final_launch_args.contains(&"--python".to_string()) {
+                // C (3.a.) final_launch_args.contains(&"--python".to_string()) != true; B (2.a.) .contains(); B (2.a.) to_string()
                 final_launch_args.push("--python".to_string()); // A (1.c.) .push(); B (2.a.) .to_string()
                 final_launch_args.push(entry.script_file_path); // A (1.c.) .push()
-            } else if final_launch_args.contains(&"--python".to_string()) { // C (3.b.) else; C (3.a.) final_launch_args.contains(&"--python".to_string()) == true; B (2.a.) .contains(); B (2.a.) .to_string()
+            } else if final_launch_args.contains(&"--python".to_string()) {
+                // C (3.b.) else; C (3.a.) final_launch_args.contains(&"--python".to_string()) == true; B (2.a.) .contains(); B (2.a.) .to_string()
                 final_launch_args.push(entry.script_file_path); // A (1.c.) .push()
             }
         }
-        None => {} // C (3.c) None =>; 
+        None => {} // C (3.c) None =>;
     }
-    match file_system_utility::launch_executable( // C (3.b) match; B (2.a.) ::launch_executable()
+    match file_system_utility::launch_executable(
+        // C (3.b) match; B (2.a.) ::launch_executable()
         installed_blender_version_entry.executable_file_path.into(), // B (2.a.) .into()
         Some(final_launch_args),
     ) {
         Ok(_) => Ok(()), // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to open project file: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -642,17 +733,21 @@ pub async fn create_new_project_file(
             Ok(val) => val, // C (3.c.) Ok()
             Err(_) => return Ok(()), // C (3.c.) Err(); B (2.b.) priekšlaicīgs return
         };
-    let directory_path = match directory_path_option { // A (1.a.) let directory_path =; C (3.b) match
+    let directory_path = match directory_path_option {
+        // A (1.a.) let directory_path =; C (3.b) match
         Some(val) => val, // C (3.c) Some()
-        None => { // C (3.c.) None =>; 
+        None => {
+            // C (3.c.) None =>;
             return Ok(()); // B (2.b.) priekšlaicīgs return
         }
     };
-    if !file_name.ends_with(".blend") { // C (3.a.) file_name.ends_with() != true; B (2.a.) .ends_with()
+    if !file_name.ends_with(".blend") {
+        // C (3.a.) file_name.ends_with() != true; B (2.a.) .ends_with()
         file_name = format!("{}.blend", file_name); // A (1.a.) file_name =;
     }
     let full_file_path = directory_path.join(&file_name); // A (1.a.) let full_file_path =; B (2.a.) .join()
-    let python_code_expression = format!( // A (1.a.) let python_code_expression =;
+    let python_code_expression = format!(
+        // A (1.a.) let python_code_expression =;
         r#"
 {}
 blend_file_path=r"{}"
@@ -668,8 +763,10 @@ blend_file_path=r"{}"
         .await
     {
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch installed Blender versions: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -681,17 +778,20 @@ blend_file_path=r"{}"
         }
     };
     let entry = entry_list.remove(0); // A (1.a.) et entry =; B (2.a.) entry_list.remove()
-    match file_system_utility::launch_executable( // C (3.b) match; B (2.a.) ::launch_executable()
+    match file_system_utility::launch_executable(
+        // C (3.b) match; B (2.a.) ::launch_executable()
         entry.executable_file_path.into(), // B (2.a.) .into()
         Some(vec![
-            "--background".to_string(), //  B (2.a.) .to_string()
+            "--background".to_string(),  //  B (2.a.) .to_string()
             "--python-expr".to_string(), //  B (2.a.) .to_string()
             python_code_expression,
         ]),
     ) {
         Ok(_) => {} // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to launch Blender version: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -699,10 +799,13 @@ blend_file_path=r"{}"
             return Err(format!("Failed to launch Blender version: {:?}", err)); // B (2.b.) priekšlaicīgs return
         }
     }
-    match insert_blend_file(app.clone(), state, full_file_path).await { // C (3.b) match; B (2.a.) insert_blend_file(); B (2.a.) app.clone();
+    match insert_blend_file(app.clone(), state, full_file_path).await {
+        // C (3.b) match; B (2.a.) insert_blend_file(); B (2.a.) app.clone();
         Ok(_) => Ok(()), // C (3.c.) Ok()
-        Err(err) => { // C (3.c) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to insert project file: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -722,10 +825,13 @@ pub async fn reveal_project_file_in_local_file_system(
     id: Option<String>,
 ) -> Result<(), String> {
     let repository = ProjectFileRepository::new(&state.pool); // A (1.a.) let repository =; B (2.a.) ...::new()
-    let mut project_file_list = match repository.fetch(id.as_deref(), None, None).await { // A (1.a.) let mut project_file_list =; C (3.b) match; B (2.a.) repository.fetch(); B (2.a.) .as_deref();
+    let mut project_file_list = match repository.fetch(id.as_deref(), None, None).await {
+        // A (1.a.) let mut project_file_list =; C (3.b) match; B (2.a.) repository.fetch(); B (2.a.) .as_deref();
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch project files: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -734,10 +840,13 @@ pub async fn reveal_project_file_in_local_file_system(
         }
     };
     let entry = project_file_list.remove(0); // A (1.a.) let entry =; B (2.a.) project_file_list.remove()
-    match file_system_utility::open_in_file_explorer(std::path::PathBuf::from(entry.file_path)) { // C (3.b) match; B (2.a.) ::open_in_file_explorer(); B (2.a.) ::from()
+    match file_system_utility::open_in_file_explorer(std::path::PathBuf::from(entry.file_path)) {
+        // C (3.b) match; B (2.a.) ::open_in_file_explorer(); B (2.a.) ::from()
         Ok(_) => Ok(()), // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to open project file in file explorer: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -760,10 +869,13 @@ pub async fn create_project_file_archive_file(
     id: Option<String>,
 ) -> Result<(), String> {
     let repository = ProjectFileRepository::new(&state.pool); // A (1.a.) let repository =; B (2.a.) ...::new();
-    let mut entry_list = match repository.fetch(id.as_deref(), None, None).await { // A (1.a.) let mut entry_list =; C (3.b) match; B (2.a.) repository.fetch(); B (2.a.) .as_deref() 
+    let mut entry_list = match repository.fetch(id.as_deref(), None, None).await {
+        // A (1.a.) let mut entry_list =; C (3.b) match; B (2.a.) repository.fetch(); B (2.a.) .as_deref()
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to fetch project files: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -772,12 +884,15 @@ pub async fn create_project_file_archive_file(
         }
     };
     let entry = entry_list.remove(0); // A (1.a.) let entry =; B (2.a.) entry_list.remove();
-    let archive_path = match file_system_utility::archive_file(std::path::PathBuf::from( // A (1.a.) let archive_path =; C (3.b) match; B (2.a.) ::archive_file(); B (2.a.) ::from()
+    let archive_path = match file_system_utility::archive_file(std::path::PathBuf::from(
+        // A (1.a.) let archive_path =; C (3.b) match; B (2.a.) ::archive_file(); B (2.a.) ::from()
         entry.file_path.clone(), // B (2.a.) entry.file_path.clone();
     )) {
         Ok(val) => val, // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!("Failed to archive project file: {:?}", err),
                 tauri_plugin_dialog::MessageDialogKind::Error,
@@ -785,10 +900,13 @@ pub async fn create_project_file_archive_file(
             return Err(format!("Failed to archive project file: {:?}", err)); // B (2.b.) priekšlaicīgs return
         }
     };
-    match file_system_utility::open_in_file_explorer(archive_path) { // C (3.b) match; B (2.a.) ::open_in_file_explorer()
+    match file_system_utility::open_in_file_explorer(archive_path) {
+        // C (3.b) match; B (2.a.) ::open_in_file_explorer()
         Ok(_) => Ok(()), // C (3.c.) Ok()
-        Err(err) => { // C (3.c.) Err();
-            show_ok_notification( // B (2.a.) show_ok_notification()
+        Err(err) => {
+            // C (3.c.) Err();
+            show_ok_notification(
+                // B (2.a.) show_ok_notification()
                 app.clone(), // B (2.a.) app.clone();
                 format!(
                     "Failed to open project archive file in file explorer: {:?}",

@@ -59,8 +59,8 @@ const CreateBlendPopup = () => {
                     <li key={v.id}>
                         <button
                             onClick={() => {
-                                    setSelectedVersionId(v.id)
-                                }
+                                setSelectedVersionId(v.id)
+                            }
                             }
                         >
                             {v.version} {v.variant_type}

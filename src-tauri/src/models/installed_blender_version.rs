@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{prelude::FromRow};
+use sqlx::prelude::FromRow;
 
 #[derive(Default, Clone, Debug, Serialize, Deserialize, FromRow)]
 pub struct InstalledBlenderVersion {

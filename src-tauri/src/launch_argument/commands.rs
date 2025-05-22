@@ -138,7 +138,7 @@ pub async fn update_launch_argument(
                 )); // B (2.b.) priekšlaicīgs return
             }
         }
-    } else { 
+    } else {
         // C (3.b.) else;
         let results = match repository.fetch(None, None, None).await {
             // A (1.a.) let results =; C (3.b.) match; B (2.a.) repository.fetch()

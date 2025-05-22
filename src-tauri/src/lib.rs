@@ -5,15 +5,15 @@ mod models;
 
 mod blender_version;
 mod file_system_utility;
+mod launch_argument;
 mod project_file;
 mod python_script;
-mod launch_argument;
 
 use crate::blender_version::*;
 use crate::file_system_utility::*;
+use crate::launch_argument::*;
 use crate::project_file::*;
 use crate::python_script::*;
-use crate::launch_argument::*;
 
 #[derive(Debug)]
 pub struct AppState {
@@ -96,7 +96,6 @@ pub async fn run() {
             //
             instance_popup_window,
             identify_internet_connection
-
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
