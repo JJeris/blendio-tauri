@@ -627,7 +627,7 @@ pub async fn open_blend_file(
 
 /// ID: PF_006
 /// Paskaidrojums:
-/// ABC analīzes rezultāts:8,26,16
+/// ABC analīzes rezultāts:8,25,16
 #[tauri::command]
 pub async fn create_new_project_file(
     app: AppHandle,
@@ -636,7 +636,7 @@ pub async fn create_new_project_file(
     mut file_name: String,
 ) -> Result<(), String> {
     let directory_path_option = // A (1.a.) let directory_path_option =
-        match file_system_utility::get_directory_from_file_explorer(app.clone(), state.clone()) // C (3.b) match; B (2.a.) get_directory_from_file_explorer(); B (2.a.) app.clone(); B (2.a.) state.clone();
+        match file_system_utility::get_directory_from_file_explorer(app.clone()) // C (3.b) match; B (2.a.) get_directory_from_file_explorer(); B (2.a.) app.clone();
             .await
         {
             Ok(val) => val, // C (3.c.) Ok()

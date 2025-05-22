@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{prelude::FromRow, SqlitePool};
+use sqlx::{prelude::FromRow};
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct LaunchArgument {

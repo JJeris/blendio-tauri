@@ -3,9 +3,6 @@ use tauri::Manager;
 mod db_repo;
 mod models;
 
-use crate::db_repo::*;
-use crate::models::*;
-
 mod blender_version;
 mod file_system_utility;
 mod project_file;

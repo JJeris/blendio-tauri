@@ -8,14 +8,14 @@ use tauri::AppHandle;
 
 /// ID: PS_001
 /// Paskaidrojums:
-/// ABC analīzes rezultāts:8,36,16
+/// ABC analīzes rezultāts:8,35,16
 #[tauri::command]
 pub async fn insert_python_script(
     app: AppHandle,
     state: tauri::State<'_, AppState>,
 ) -> Result<Option<PythonScript>, String> {
     let file_path_option = // A (1.a.) let file_path_option =;
-        match file_system_utility::get_file_from_file_explorer(app.clone(), state.clone()).await { // C (3.b.) match; B (2.a.) get_file_from_file_explorer(); // B (2.a.) app.clone(); B (2.a.) state.clone()
+        match file_system_utility::get_file_from_file_explorer(app.clone()).await { // C (3.b.) match; B (2.a.) get_file_from_file_explorer(); B (2.a.) app.clone();
             Ok(val) => val, // C (3.c) Ok()
             Err(_) => return Ok(None), // C (3.c) Err(); // B (2.b.) priekšlaicīgs return
         };

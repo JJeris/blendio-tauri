@@ -1,10 +1,8 @@
 use std::io::{Read, Write};
 
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{AppHandle, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
 use zip::ZipArchive;
-
-use crate::AppState;
 
 /// ID: FSU_001
 /// Paskaidrojums:
@@ -236,7 +234,6 @@ pub fn open_in_file_explorer(file_path: std::path::PathBuf) -> Result<(), String
 /// ABC analīzes rezultāts:3,7,3
 pub async fn get_file_from_file_explorer(
     app: AppHandle,
-    state: tauri::State<'_, AppState>,
 ) -> Result<Option<std::path::PathBuf>, String> {
     let file_path_option = app // A (1.a.) let file_path_option =; 
         .dialog() // B (2.a.) .dialog()
@@ -256,7 +253,6 @@ pub async fn get_file_from_file_explorer(
 /// ABC analīzes rezultāts:3,6,3
 pub async fn get_directory_from_file_explorer(
     app: AppHandle,
-    state: tauri::State<'_, AppState>,
 ) -> Result<Option<std::path::PathBuf>, String> {
     let directory_path_option = app.dialog().file().blocking_pick_folder(); // A (1.a.) let directory_path_option =; B (2.a.) .dialog(); B (2.a.) .file(); B (2.a.) .blocking_pick_folder()
     let directory_path_string = match directory_path_option { // A (1.a.) let directory_path_string =; C (3.b) match

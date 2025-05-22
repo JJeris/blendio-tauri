@@ -802,14 +802,14 @@ pub async fn download_and_install_blender_version(
 
 /// ID: BV_009
 /// Paskaidrojums:
-/// ABC analīzes rezultāts:5,27,13
+/// ABC analīzes rezultāts:5,26,13
 #[tauri::command]
 pub async fn insert_blender_version_installation_location(
     app: AppHandle,
     state: tauri::State<'_, AppState>,
 ) -> Result<(), String> {
     let repo_directory_path_option = // A (1.a.) let repo_directory_path_option =
-        match file_system_utility::get_directory_from_file_explorer(app.clone(), state.clone()) // C (3.b) match; B (2.a.) get_directory_from_file_explorer(); B (2.a.) app.clone(); B (2.a.) state.clone(); 
+        match file_system_utility::get_directory_from_file_explorer(app.clone()) // C (3.b) match; B (2.a.) get_directory_from_file_explorer(); B (2.a.) app.clone();
             .await
         {
             Ok(val) => val, // C (3.c.) Ok()
