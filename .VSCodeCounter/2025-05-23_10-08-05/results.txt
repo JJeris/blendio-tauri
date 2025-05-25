@@ -1,0 +1,117 @@
+Date : 2025-05-23 10:08:05
+Directory : c:\bakalaura_darba\blendio-tauri
+Total : 62 files,  4621 codes, 584 comments, 296 blanks, all 5501 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| Rust           |         27 |      2,898 |        559 |        119 |      3,576 |
+| JavaScript JSX |         12 |      1,332 |          4 |        123 |      1,459 |
+| JSON           |          7 |        136 |          0 |          4 |        140 |
+| PostCSS        |          2 |        101 |          0 |         23 |        124 |
+| SQLite         |          8 |         61 |         11 |          9 |         81 |
+| JavaScript     |          2 |         52 |          6 |          8 |         66 |
+| TOML           |          1 |         27 |          4 |          6 |         37 |
+| HTML           |          1 |         13 |          0 |          2 |         15 |
+| Properties     |          1 |          1 |          0 |          1 |          2 |
+| Markdown       |          1 |          0 |          0 |          1 |          1 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                     |         62 |      4,621 |        584 |        296 |      5,501 |
+| . (Files)                                                                                                             |          4 |         62 |          6 |          8 |         76 |
+| src                                                                                                                   |         15 |      1,463 |          4 |        150 |      1,617 |
+| src (Files)                                                                                                           |          3 |         53 |          1 |          8 |         62 |
+| src-tauri                                                                                                             |         43 |      3,096 |        574 |        138 |      3,808 |
+| src-tauri (Files)                                                                                                     |          4 |         69 |          4 |          9 |         82 |
+| src-tauri\capabilities                                                                                                |          5 |         71 |          0 |          2 |         73 |
+| src-tauri\migrations                                                                                                  |          8 |         61 |         11 |          9 |         81 |
+| src-tauri\src                                                                                                         |         26 |      2,895 |        559 |        118 |      3,572 |
+| src-tauri\src (Files)                                                                                                 |          2 |         89 |          8 |         14 |        111 |
+| src-tauri\src\blender_version                                                                                         |          2 |      1,017 |        218 |         16 |      1,251 |
+| src-tauri\src\db_repo                                                                                                 |          6 |        381 |         15 |         37 |        433 |
+| src-tauri\src\file_system_utility                                                                                     |          2 |        237 |         64 |         15 |        316 |
+| src-tauri\src\launch_argument                                                                                         |          2 |        202 |         50 |          6 |        258 |
+| src-tauri\src\models                                                                                                  |          7 |         94 |          1 |         14 |        109 |
+| src-tauri\src\project_file                                                                                            |          3 |        749 |        173 |         11 |        933 |
+| src-tauri\src\python_script                                                                                           |          2 |        126 |         30 |          5 |        161 |
+| src\components                                                                                                        |          2 |         36 |          0 |          6 |         42 |
+| src\components\TitleBar                                                                                               |          2 |         36 |          0 |          6 |         42 |
+| src\popup                                                                                                             |          4 |        552 |          1 |         59 |        612 |
+| src\styles                                                                                                            |          1 |         82 |          0 |         20 |        102 |
+| src\utils                                                                                                             |          1 |         30 |          0 |          4 |         34 |
+| src\views                                                                                                             |          4 |        710 |          2 |         53 |        765 |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                              | language       | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\bakalaura_darba\blendio-tauri\README.md                                                                            | Markdown       |          0 |          0 |          1 |          1 |
+| c:\bakalaura_darba\blendio-tauri\index.html                                                                           | HTML           |         13 |          0 |          2 |         15 |
+| c:\bakalaura_darba\blendio-tauri\package.json                                                                         | JSON           |         27 |          0 |          1 |         28 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\.env                                                                       | Properties     |          1 |          0 |          1 |          2 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\Cargo.toml                                                                 | TOML           |         27 |          4 |          6 |         37 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\build.rs                                                                   | Rust           |          3 |          0 |          1 |          4 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\create-project-file-popup.json                                | JSON           |         13 |          0 |          1 |         14 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\default.json                                                  | JSON           |         19 |          0 |          0 |         19 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\download-popup.json                                           | JSON           |         13 |          0 |          1 |         14 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\launch-blender-popup.json                                     | JSON           |         13 |          0 |          0 |         13 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\launch-project-file-popup.json                                | JSON           |         13 |          0 |          0 |         13 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250427133325_init.down.sql                                    | SQLite         |          5 |          0 |          1 |          6 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250427133325_init.up.sql                                      | SQLite         |         50 |          5 |          5 |         60 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250503124439_add_index_to_project_file.down.sql               | SQLite         |          1 |          1 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250503124439_add_index_to_project_file.up.sql                 | SQLite         |          1 |          1 |          0 |          2 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504092442_add_index_to_python_scripts.down.sql             | SQLite         |          1 |          1 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504092442_add_index_to_python_scripts.up.sql               | SQLite         |          1 |          1 |          0 |          2 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504172200_add_index_to_installed_blender_versions.down.sql | SQLite         |          1 |          1 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504172200_add_index_to_installed_blender_versions.up.sql   | SQLite         |          1 |          1 |          0 |          2 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\blender_version\commands.rs                                            | Rust           |      1,015 |        218 |         15 |      1,248 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\blender_version\mod.rs                                                 | Rust           |          2 |          0 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\blender_repo_path_repo.rs                                      | Rust           |         72 |          3 |          7 |         82 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\installed_blender_version_repo.rs                              | Rust           |         82 |          3 |          7 |         92 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\launch_argument_repo.rs                                        | Rust           |         75 |          3 |          7 |         85 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\mod.rs                                                         | Rust           |         10 |          0 |          2 |         12 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\project_fiile_repo.rs                                          | Rust           |         73 |          3 |          7 |         83 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\python_script_repo.rs                                          | Rust           |         69 |          3 |          7 |         79 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\file_system_utility\commands.rs                                        | Rust           |        235 |         64 |         14 |        313 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\file_system_utility\mod.rs                                             | Rust           |          2 |          0 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\launch_argument\commands.rs                                            | Rust           |        200 |         50 |          5 |        255 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\launch_argument\mod.rs                                                 | Rust           |          2 |          0 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\lib.rs                                                                 | Rust           |         84 |          7 |         12 |        103 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\main.rs                                                                | Rust           |          5 |          1 |          2 |          8 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\blender_repo_path.rs                                            | Rust           |         11 |          0 |          2 |         13 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\downloadable_blender_version.rs                                 | Rust           |         20 |          0 |          2 |         22 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\installed_blender_version.rs                                    | Rust           |         15 |          1 |          2 |         18 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\launch_argument.rs                                              | Rust           |         13 |          0 |          2 |         15 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\mod.rs                                                          | Rust           |         12 |          0 |          2 |         14 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\project_file.rs                                                 | Rust           |         13 |          0 |          2 |         15 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\python_script.rs                                                | Rust           |         10 |          0 |          2 |         12 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\commands.rs                                               | Rust           |        743 |        172 |          9 |        924 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\consts.rs                                                 | Rust           |          2 |          1 |          1 |          4 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\mod.rs                                                    | Rust           |          4 |          0 |          1 |          5 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\python_script\commands.rs                                              | Rust           |        124 |         30 |          4 |        158 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\src\python_script\mod.rs                                                   | Rust           |          2 |          0 |          1 |          3 |
+| c:\bakalaura_darba\blendio-tauri\src-tauri\tauri.conf.json                                                            | JSON           |         38 |          0 |          1 |         39 |
+| c:\bakalaura_darba\blendio-tauri\src\App.jsx                                                                          | JavaScript JSX |         20 |          1 |          2 |         23 |
+| c:\bakalaura_darba\blendio-tauri\src\components\TitleBar\TitleBar.css                                                 | PostCSS        |         19 |          0 |          3 |         22 |
+| c:\bakalaura_darba\blendio-tauri\src\components\TitleBar\TitleBar.jsx                                                 | JavaScript JSX |         17 |          0 |          3 |         20 |
+| c:\bakalaura_darba\blendio-tauri\src\main.jsx                                                                         | JavaScript JSX |          9 |          0 |          2 |         11 |
+| c:\bakalaura_darba\blendio-tauri\src\popup\CreateBlendPopup.jsx                                                       | JavaScript JSX |         81 |          0 |          9 |         90 |
+| c:\bakalaura_darba\blendio-tauri\src\popup\DownloadPopup.jsx                                                          | JavaScript JSX |         68 |          0 |         10 |         78 |
+| c:\bakalaura_darba\blendio-tauri\src\popup\LaunchBlendPopup.jsx                                                       | JavaScript JSX |        226 |          1 |         21 |        248 |
+| c:\bakalaura_darba\blendio-tauri\src\popup\LaunchBlenderPopup.jsx                                                     | JavaScript JSX |        177 |          0 |         19 |        196 |
+| c:\bakalaura_darba\blendio-tauri\src\router.jsx                                                                       | JavaScript JSX |         24 |          0 |          4 |         28 |
+| c:\bakalaura_darba\blendio-tauri\src\styles\main.css                                                                  | PostCSS        |         82 |          0 |         20 |        102 |
+| c:\bakalaura_darba\blendio-tauri\src\utils\web.js                                                                     | JavaScript     |         30 |          0 |          4 |         34 |
+| c:\bakalaura_darba\blendio-tauri\src\views\BlenderDownload.jsx                                                        | JavaScript JSX |        127 |          0 |          9 |        136 |
+| c:\bakalaura_darba\blendio-tauri\src\views\InstalledBlenderVersions.jsx                                               | JavaScript JSX |        151 |          1 |         11 |        163 |
+| c:\bakalaura_darba\blendio-tauri\src\views\ProjectFiles.jsx                                                           | JavaScript JSX |        201 |          1 |         16 |        218 |
+| c:\bakalaura_darba\blendio-tauri\src\views\Settings.jsx                                                               | JavaScript JSX |        231 |          0 |         17 |        248 |
+| c:\bakalaura_darba\blendio-tauri\vite.config.js                                                                       | JavaScript     |         22 |          6 |          4 |         32 |
+| Total                                                                                                                 |                |      4,621 |        584 |        296 |      5,501 |
++-----------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

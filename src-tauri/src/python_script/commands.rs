@@ -7,7 +7,6 @@ use crate::{
 use tauri::AppHandle;
 
 /// ID: PS_001
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:8,35,16
 #[tauri::command]
 pub async fn insert_python_script(
@@ -88,7 +87,6 @@ pub async fn insert_python_script(
 }
 
 /// ID: PS_002
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,8,3
 #[tauri::command]
 pub async fn fetch_python_scripts(
@@ -121,7 +119,6 @@ pub async fn fetch_python_scripts(
 }
 
 /// ID: PS_003
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:2,8,4
 #[tauri::command]
 pub async fn delete_python_script(

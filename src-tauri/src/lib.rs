@@ -48,16 +48,16 @@ pub async fn run() {
         .plugin(tauri_plugin_dialog::init())
         .manage(app_state)
         .plugin(tauri_plugin_upload::init())
-        .setup(|app| {
-            // Opens the developer tools when run in debug.
-            let window = app.get_webview_window("main").unwrap();
-            #[cfg(debug_assertions)]
-            {
-                window.open_devtools();
-                window.close_devtools();
-            }
-            Ok(())
-        })
+        // .setup(|app| {
+        //     // Opens the developer tools when run in debug.
+        //     #[cfg(debug_assertions)]
+        //     {
+        //         let window = app.get_webview_window("main").unwrap();
+        //         window.open_devtools();
+        //         window.close_devtools();
+        //     }
+        //     Ok(())
+        // })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             //

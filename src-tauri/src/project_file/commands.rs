@@ -10,7 +10,6 @@ use crate::{
 use tauri::AppHandle;
 
 /// ID: PF_001
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,24,6
 #[tauri::command]
 pub async fn insert_blend_file(
@@ -63,7 +62,6 @@ pub async fn insert_blend_file(
 }
 
 /// ID: PF_002
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:28,101,50
 #[tauri::command]
 pub async fn insert_and_refresh_blend_files(
@@ -366,7 +364,6 @@ pub async fn insert_and_refresh_blend_files(
 }
 
 /// ID: PF_003
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,8,3
 #[tauri::command]
 pub async fn fetch_blend_files(
@@ -399,7 +396,6 @@ pub async fn fetch_blend_files(
 }
 
 /// ID: PF_004
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:4,24,13
 #[tauri::command]
 pub async fn delete_blend_file(
@@ -480,7 +476,6 @@ pub async fn delete_blend_file(
 }
 
 /// ID: PF_005
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:19,74,40
 #[tauri::command]
 pub async fn open_blend_file(
@@ -717,7 +712,6 @@ pub async fn open_blend_file(
 }
 
 /// ID: PF_006
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:8,25,16
 #[tauri::command]
 pub async fn create_new_project_file(
@@ -816,7 +810,6 @@ blend_file_path=r"{}"
 }
 
 /// ID: PF_007
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,12,6
 #[tauri::command]
 pub async fn reveal_project_file_in_local_file_system(
@@ -860,7 +853,6 @@ pub async fn reveal_project_file_in_local_file_system(
 }
 
 /// ID: PF_008
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:4,17,9
 #[tauri::command]
 pub async fn create_project_file_archive_file(

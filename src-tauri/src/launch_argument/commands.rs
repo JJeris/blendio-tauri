@@ -7,7 +7,6 @@ use crate::{
 use tauri::AppHandle;
 
 /// ID: KP_001
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:6,28,10
 #[tauri::command]
 pub async fn insert_launch_argument(
@@ -83,7 +82,6 @@ pub async fn insert_launch_argument(
 }
 
 /// ID: KP_002
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:8,21,17
 #[tauri::command]
 pub async fn update_launch_argument(
@@ -185,7 +183,6 @@ pub async fn update_launch_argument(
 }
 
 /// ID: KP_003
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,8,3
 #[tauri::command]
 pub async fn fetch_launch_arguments(
@@ -218,7 +215,6 @@ pub async fn fetch_launch_arguments(
 }
 
 /// ID: KP_004
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:2,8,4
 #[tauri::command]
 pub async fn delete_launch_argument(

@@ -5,7 +5,6 @@ use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
 use zip::ZipArchive;
 
 /// ID: FSU_001
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:0,12,3
 #[tauri::command]
 pub async fn instance_popup_window(
@@ -36,7 +35,6 @@ pub async fn instance_popup_window(
 }
 
 /// ID: FSU_002
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:1,7,3
 #[tauri::command]
 pub async fn identify_internet_connection() -> Result<bool, String> {
@@ -52,7 +50,6 @@ pub async fn identify_internet_connection() -> Result<bool, String> {
 }
 
 /// ID: FSU_003
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:0,5,0
 pub fn show_ok_notification(
     app: AppHandle,
@@ -68,7 +65,6 @@ pub fn show_ok_notification(
 }
 
 /// ID: FSU_004
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:1,7,0
 pub fn show_ask_notification(
     app: AppHandle,
@@ -89,7 +85,6 @@ pub fn show_ask_notification(
 }
 
 /// ID: FSU_005
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:11,26,23
 pub async fn extract_archive(
     archive_file_path: std::path::PathBuf,
@@ -151,7 +146,6 @@ pub async fn extract_archive(
 }
 
 /// ID: FSU_006
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:7,21,21
 pub fn archive_file(file_path: std::path::PathBuf) -> Result<std::path::PathBuf, String> {
     let file_name = match file_path.file_name() {
@@ -198,7 +192,6 @@ pub fn archive_file(file_path: std::path::PathBuf) -> Result<std::path::PathBuf,
 }
 
 /// ID: FSU_007
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,4,6
 pub fn launch_executable(
     executable_file_path: std::path::PathBuf,
@@ -219,7 +212,6 @@ pub fn launch_executable(
 }
 
 /// ID: FSU_008
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:1,14,12
 pub fn open_in_file_explorer(file_path: std::path::PathBuf) -> Result<(), String> {
     let parent_directory = match file_path.parent() {
@@ -254,7 +246,6 @@ pub fn open_in_file_explorer(file_path: std::path::PathBuf) -> Result<(), String
 }
 
 /// ID: FSU_009
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,7,3
 pub async fn get_file_from_file_explorer(
     app: AppHandle,
@@ -274,7 +265,6 @@ pub async fn get_file_from_file_explorer(
 }
 
 /// ID: FSU_010
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,6,3
 pub async fn get_directory_from_file_explorer(
     app: AppHandle,
@@ -290,7 +280,6 @@ pub async fn get_directory_from_file_explorer(
 }
 
 /// ID: FSU_011
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:0,2,3
 pub async fn delete_file(file_path: std::path::PathBuf) -> Result<(), String> {
     match std::fs::remove_file(file_path) {
@@ -301,7 +290,6 @@ pub async fn delete_file(file_path: std::path::PathBuf) -> Result<(), String> {
 }
 
 /// ID: FSU_012
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:0,2,3
 pub async fn delete_directory(directory_path: std::path::PathBuf) -> Result<(), String> {
     match std::fs::remove_dir_all(directory_path) {

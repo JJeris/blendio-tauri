@@ -1,0 +1,64 @@
+"filename", "language", "JavaScript", "JSON", "Markdown", "HTML", "JavaScript JSX", "Properties", "PostCSS", "Rust", "TOML", "SQLite", "comment", "blank", "total"
+"c:\bakalaura_darba\blendio-tauri\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\bakalaura_darba\blendio-tauri\index.html", "HTML", 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 2, 15
+"c:\bakalaura_darba\blendio-tauri\package.json", "JSON", 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 28
+"c:\bakalaura_darba\blendio-tauri\src-tauri\.env", "Properties", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2
+"c:\bakalaura_darba\blendio-tauri\src-tauri\Cargo.toml", "TOML", 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 4, 6, 37
+"c:\bakalaura_darba\blendio-tauri\src-tauri\build.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 4
+"c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\create-project-file-popup.json", "JSON", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14
+"c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\default.json", "JSON", 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19
+"c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\download-popup.json", "JSON", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14
+"c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\launch-blender-popup.json", "JSON", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13
+"c:\bakalaura_darba\blendio-tauri\src-tauri\capabilities\launch-project-file-popup.json", "JSON", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250427133325_init.down.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 6
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250427133325_init.up.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 5, 5, 60
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250503124439_add_index_to_project_file.down.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250503124439_add_index_to_project_file.up.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 2
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504092442_add_index_to_python_scripts.down.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504092442_add_index_to_python_scripts.up.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 2
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504172200_add_index_to_installed_blender_versions.down.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\migrations\20250504172200_add_index_to_installed_blender_versions.up.sql", "SQLite", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 2
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\blender_version\commands.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 1015, 0, 0, 218, 15, 1248
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\blender_version\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\blender_repo_path_repo.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 72, 0, 0, 3, 7, 82
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\installed_blender_version_repo.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 3, 7, 92
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\launch_argument_repo.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 3, 7, 85
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 2, 12
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\project_fiile_repo.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 73, 0, 0, 3, 7, 83
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\db_repo\python_script_repo.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 3, 7, 79
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\file_system_utility\commands.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 235, 0, 0, 64, 14, 313
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\file_system_utility\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\launch_argument\commands.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 50, 5, 255
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\launch_argument\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\lib.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 84, 0, 0, 7, 12, 103
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\main.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 2, 8
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\blender_repo_path.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 2, 13
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\downloadable_blender_version.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 2, 22
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\installed_blender_version.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 2, 18
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\launch_argument.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 2, 15
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 2, 14
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\project_file.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 2, 15
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\models\python_script.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 2, 12
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\commands.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 743, 0, 0, 172, 9, 924
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\consts.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 4
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\project_file\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1, 5
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\python_script\commands.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 30, 4, 158
+"c:\bakalaura_darba\blendio-tauri\src-tauri\src\python_script\mod.rs", "Rust", 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 3
+"c:\bakalaura_darba\blendio-tauri\src-tauri\tauri.conf.json", "JSON", 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 39
+"c:\bakalaura_darba\blendio-tauri\src\App.jsx", "JavaScript JSX", 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 1, 2, 23
+"c:\bakalaura_darba\blendio-tauri\src\components\TitleBar\TitleBar.css", "PostCSS", 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 3, 22
+"c:\bakalaura_darba\blendio-tauri\src\components\TitleBar\TitleBar.jsx", "JavaScript JSX", 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 3, 20
+"c:\bakalaura_darba\blendio-tauri\src\main.jsx", "JavaScript JSX", 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 2, 11
+"c:\bakalaura_darba\blendio-tauri\src\popup\CreateBlendPopup.jsx", "JavaScript JSX", 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 9, 90
+"c:\bakalaura_darba\blendio-tauri\src\popup\DownloadPopup.jsx", "JavaScript JSX", 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 10, 78
+"c:\bakalaura_darba\blendio-tauri\src\popup\LaunchBlendPopup.jsx", "JavaScript JSX", 0, 0, 0, 0, 226, 0, 0, 0, 0, 0, 1, 21, 248
+"c:\bakalaura_darba\blendio-tauri\src\popup\LaunchBlenderPopup.jsx", "JavaScript JSX", 0, 0, 0, 0, 177, 0, 0, 0, 0, 0, 0, 19, 196
+"c:\bakalaura_darba\blendio-tauri\src\router.jsx", "JavaScript JSX", 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 4, 28
+"c:\bakalaura_darba\blendio-tauri\src\styles\main.css", "PostCSS", 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 20, 102
+"c:\bakalaura_darba\blendio-tauri\src\utils\web.js", "JavaScript", 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 34
+"c:\bakalaura_darba\blendio-tauri\src\views\BlenderDownload.jsx", "JavaScript JSX", 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 9, 136
+"c:\bakalaura_darba\blendio-tauri\src\views\InstalledBlenderVersions.jsx", "JavaScript JSX", 0, 0, 0, 0, 151, 0, 0, 0, 0, 0, 1, 11, 163
+"c:\bakalaura_darba\blendio-tauri\src\views\ProjectFiles.jsx", "JavaScript JSX", 0, 0, 0, 0, 201, 0, 0, 0, 0, 0, 1, 16, 218
+"c:\bakalaura_darba\blendio-tauri\src\views\Settings.jsx", "JavaScript JSX", 0, 0, 0, 0, 231, 0, 0, 0, 0, 0, 0, 17, 248
+"c:\bakalaura_darba\blendio-tauri\vite.config.js", "JavaScript", 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 4, 32
+"Total", "-", 52, 136, 0, 13, 1332, 1, 101, 2898, 27, 61, 584, 296, 5501

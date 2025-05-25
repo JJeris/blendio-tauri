@@ -11,7 +11,6 @@ use regex::Regex;
 use tauri::AppHandle;
 
 /// ID: BV_001
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:10,44,12
 #[tauri::command]
 pub async fn insert_installed_blender_version(
@@ -109,7 +108,6 @@ pub async fn insert_installed_blender_version(
 }
 
 /// ID: BV_002
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:12,44,25
 #[tauri::command]
 pub async fn insert_and_refresh_installed_blender_versions(
@@ -276,7 +274,6 @@ pub async fn insert_and_refresh_installed_blender_versions(
 }
 
 /// ID: BV_003
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:8,22,17
 #[tauri::command]
 pub async fn update_installed_blender_version(
@@ -386,7 +383,6 @@ pub async fn update_installed_blender_version(
 }
 
 /// ID: BV_004
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:3,8,3
 #[tauri::command]
 pub async fn fetch_installed_blender_versions(
@@ -422,7 +418,6 @@ pub async fn fetch_installed_blender_versions(
 }
 
 /// ID: BV_005
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:4,26,14
 #[tauri::command]
 pub async fn uninstall_and_delete_installed_blender_version_data(
@@ -517,7 +512,6 @@ pub async fn uninstall_and_delete_installed_blender_version_data(
 }
 
 /// ID: BV_006
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:15,56,33
 #[tauri::command]
 pub async fn launch_blender_version_with_launch_args(
@@ -715,7 +709,6 @@ pub async fn launch_blender_version_with_launch_args(
 }
 
 /// ID: BV_007
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:5,20,18
 #[tauri::command]
 pub async fn get_downloadable_blender_version_data(
@@ -792,7 +785,6 @@ pub async fn get_downloadable_blender_version_data(
 }
 
 /// ID: BV_008
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:16,47,17
 #[tauri::command]
 pub async fn download_and_install_blender_version(
@@ -930,7 +922,6 @@ pub async fn download_and_install_blender_version(
 }
 
 /// ID: BV_009
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:5,26,13
 #[tauri::command]
 pub async fn insert_blender_version_installation_location(
@@ -998,7 +989,6 @@ pub async fn insert_blender_version_installation_location(
 }
 
 /// ID: BV_010
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:8,23,17
 #[tauri::command]
 pub async fn update_blender_version_installation_location(
@@ -1097,7 +1087,6 @@ pub async fn update_blender_version_installation_location(
 }
 
 /// ID: BV_011
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:2,6,3
 #[tauri::command]
 pub async fn fetch_blender_version_installation_locations(
@@ -1129,7 +1118,6 @@ pub async fn fetch_blender_version_installation_locations(
 }
 
 /// ID: BV_012
-/// Paskaidrojums:
 /// ABC analīzes rezultāts:7,27,15
 #[tauri::command]
 pub async fn delete_blender_version_installation_location(
